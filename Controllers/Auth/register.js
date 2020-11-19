@@ -17,8 +17,8 @@ const logger = require('../../logger').Logger;
 
 const URL =
   process.env.NODE_ENV === 'development'
-    ? process.env.ZURI_TALENT_DEV_URL
-    : process.env.ZURI_TALENT_FRONT_END_URL;
+    ? process.env.COIN_INVESTIFY_DEV_URL
+    : process.env.COIN_INVESTIFY_FRONT_END_URL;
 
 
 const investorRegistration = async (req, res) => {
@@ -36,7 +36,7 @@ const investorRegistration = async (req, res) => {
 	const userExists = await getUserByEmail(email);
 	const userPhoneExists = await getUserByPhoneNumber(phoneNumber);
 	if (userExists && userExists.email === email)
-		return errorResMsg(res, 403, 'Email is not available');
+		return errorResMsg(res, 403, 'Email is already exist');
 	if (userPhoneExists && userPhoneExists.phoneNumber === phoneNumber)
   	return errorResMsg(res, 403, 'phone number is not available');
 		

@@ -148,7 +148,7 @@ const resendVerificationLink = async (req, res) => {
     try {
       const user = await getUserByEmail(email);
       if (!user)
-        successResMsg(res, 201, { message: 'Verification email re-sent!' });
+        successResMsg(res, 201, { message: 'Email does not exist!' });
 
       if (user.status === '1') {
         // delete cache of user and set again
@@ -183,7 +183,7 @@ const resendVerificationLink = async (req, res) => {
 
       successResMsg(res, 201, { message: 'Verification email re-sent!' });
     } catch (error) {
-      logger.log(error);
+      logger.error(error);
       return errorResMsg(
         res,
         500,

@@ -17,7 +17,7 @@ module.exports = {
     return model.User.findAll({
       // TODO: bring line 19 back when email for email verification is settled
       // where: { status: '1', roleId: 'ROL-EMPLOYEE' },
-      where: { roleId: 'ROL-INVESTOR', profileCreated: true },
+      where: { roleId: 'ROL-INVESTOR' },
       attributes: attributesTalents,
     });
   },

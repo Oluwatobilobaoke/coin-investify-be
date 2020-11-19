@@ -4,13 +4,15 @@ const {
   investorRegistration
 } = require('../../Controllers/Auth/register');
 
-const { verifyEmail } = require('../../Controllers/auth/verify-email');
+const { login } = require('../../Controllers/Auth/login');
+
+const { verifyEmail } = require('../../Controllers/Auth/verify-email');
 
 const {
   resetPassword,
   forgotPassword,
   resendVerificationLink,
-} = require('../../Controllers/auth/reset-password');
+} = require('../../Controllers/Auth/reset-password');
 
 const { 
 	UserValidation
@@ -24,9 +26,10 @@ router.post(
   investorRegistration
 );
 
+router.post('/login', UserValidation.validateLogin, login);
 
 router.get('/email/verify', verifyEmail);
-router.put(
+router.post(
   '/email/verify/resend',
   UserValidation.resendVerificationLink,
   resendVerificationLink
