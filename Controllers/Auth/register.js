@@ -28,17 +28,17 @@ const investorRegistration = async (req, res) => {
 		lastName,
 		email,
 		country,
-		phoneNumber,
+		// phoneNumber,
 		btcWallet,
 		password,
 	} = req.body;
 
 	const userExists = await getUserByEmail(email);
-	const userPhoneExists = await getUserByPhoneNumber(phoneNumber);
+	// const userPhoneExists = await getUserByPhoneNumber(phoneNumber);
 	if (userExists && userExists.email === email)
 		return errorResMsg(res, 403, 'Email is already exist');
-	if (userPhoneExists && userPhoneExists.phoneNumber === phoneNumber)
-  	return errorResMsg(res, 403, 'phone number is not available');
+	// if (userPhoneExists && userPhoneExists.phoneNumber === phoneNumber)
+  	// return errorResMsg(res, 403, 'phone number is not available');
 		
 	const hashedPassword = hashPassword(password);
 	const userId = v4();
@@ -53,9 +53,6 @@ const investorRegistration = async (req, res) => {
 		firstName,
 		lastName,
 		email,
-		country,
-		phoneNumber,
-		btcWallet,
 		password: hashedPassword,
 		roleId: 'ROL-INVESTOR',
 		userId,

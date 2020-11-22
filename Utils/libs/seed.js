@@ -75,11 +75,11 @@ const seedSuperAdmin = async () => {
             mask: '*',
             validate: confirmPasswordInput,
           },
-          {
-            name: 'phone',
-            message: 'Phone number:',
-            validate: confirmPhone,
-          },
+          // {
+          //   name: 'phone',
+          //   message: 'Phone number:',
+          //   validate: confirmPhone,
+          // },
           {
             name: 'email',
             message: 'email (default: email@example.com)',
@@ -96,7 +96,7 @@ const seedSuperAdmin = async () => {
           const superAdminAccount = {
             firstName: answers.firstName,
             lastName: answers.lastName,
-            phoneNumber: answers.phone,
+            // phoneNumber: answers.phone,
             email: answers.email,
             password: answers.password,
             userId,
@@ -114,7 +114,7 @@ const seedSuperAdmin = async () => {
         const superAdminAccount = {
           firstName: 'admin',
           lastName: 'admin',
-          phoneNumber: '09000000000',
+         // phoneNumber: '09000000000',
           email: process.env.ZURI_TALENT_FROM_EMAIL,
           password,
           userId,

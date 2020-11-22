@@ -1,9 +1,12 @@
 /* eslint-disable consistent-return */
 const { signJWT } = require('../../Utils/libs/token');
 const { comparePassword } = require('../../Utils/libs/password');
+
 const {
   getUserByEmail,
+  updateUser,
   updateActivityTracking,
+  getUserByloginToken,
 } = require('../dao/impl/db/user');
 const { trackLogin } = require('../dao/impl/db/tracking');
 const { successResMsg, errorResMsg } = require('../../Utils/libs/response');
@@ -11,6 +14,9 @@ const { getIp } = require('../../Utils/libs/get-Ip');
 // const Role = require('../../Middleware/role');
 const redisKeys = require('../dao/impl/redis/redis-key-gen');
 const logger = require('../../logger').Logger;
+
+const { sendEmail } = require('../../Utils/libs/send-mail');
+
 
 const Cache = require('../../Utils/libs/cache');
 
@@ -66,7 +72,50 @@ const returnUser = async (req, res, email, password, user) => {
 
       // SET sign in location and time
       const currentUser = await getUserByEmail(email);
+      const lastLoginIp = currentUser.dataValues.currentSignInIp;
+      console.log(`here is lastloginIp: ${lastLoginIp}`);
       const ipAddress = getIp(req);
+      console.log('here is the ip address', ipAddress)  //TODO Dont forget to remove this line in production
+
+      if ((lastLoginIp !== ipAddress && currentUser.signInCount == 0) || (lastLoginIp !== ipAddress)) {
+          try {
+            
+
+          const generateLoginToken = () => {
+              const loginToken = Math.floor(100000 + Math.random() * 900000);
+               
+               // Set expire
+             const loginTokenExpire = Date.now() + 30 * 60 * 1000;
+             return {loginToken, loginTokenExpire}
+           }
+            
+           const {
+            loginToken,
+            loginTokenExpire,
+          } = generateLoginToken();
+      
+          await updateUser({ email }, { loginToken, loginTokenExpire });
+
+
+            // Create Login Token 
+            const loginTokenMessage = `${loginToken}`;
+
+            await sendEmail({
+              email,
+              subject: 'Coin-Investify Login Code',
+              message: `
+                Hello ${currentUser.dataValues.firstName}, We detected a login attempt from this ip address, ${ipAddress}, here is 6 verification code
+                ${loginTokenMessage}`
+            });
+            console.log('Broski is it you??, why are you using another person\'s ride', loginToken);
+            return successResMsg(res, 201, { message: 'Login Token has been sent to your email' });
+          } catch (error) {
+            logger.error(error);
+            return errorResMsg(res, 500, 'it is us, not you. Please try again');
+          }
+      }
+
+
       await updateActivityTracking(currentUser, ipAddress);
 
       const date = new Date();
@@ -98,6 +147,66 @@ const returnUser = async (req, res, email, password, user) => {
   }
 };
 
+
+const verifyLogin = async (req, res) => {
+  const { loginToken } = req.body
+
+  try {
+    const user = await getUserByloginToken(loginToken);
+    // console.log(user.email);
+  if (!user) {
+    return errorResMsg(res, 400, 'Invalid token');
+  }
+
+  if (user.dataValues.loginTokenExpire < Date.now()) {
+    return errorResMsg(res, 400, 'Login token has expired');
+  }
+  // Set records
+  user.loginToken = null;
+  user.loginTokenExpire = null;
+  await user.save();
+
+
+  // SET sign in location and time
+  const currentUser = await getUserByEmail(user.email);
+  const ipAddress = getIp(req);
+  await updateActivityTracking(currentUser, ipAddress);
+
+  const date = new Date();
+
+  // Track Login
+  const dataToTrack = {
+    userId: currentUser.userId,
+    signInDate: date,
+    signInIp: ipAddress,
+  };
+
+  await trackLogin(dataToTrack);
+
+  let data = {
+    userId: user.userId.toString(),
+    email: user.email,
+    userRole: user.roleId,
+  };
+
+  // console.log(data);
+  
+  const token = signJWT(data);
+
+      // // set cache if not set
+      // const keyId = redisKeys.getHashKey(`email:${email.toString()}`);
+      // const userCacheData = await cache.get(keyId); // fetch from cache
+      // if (!userCacheData) await cache.set(keyId, user); // set email data to cache
+
+      const dataInfo = { message: 'Login Attempt Verified Successfully!', token };
+      return successResMsg(res, 200, dataInfo);
+  } catch (error) {
+    logger.error(error);
+    return errorResMsg(res, 500, 'Something went wrong');
+  }
+
+};
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -122,4 +231,5 @@ const login = async (req, res) => {
 
 module.exports = {
   login,
+  verifyLogin,
 };

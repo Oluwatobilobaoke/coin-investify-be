@@ -6,6 +6,8 @@ const {
 
 const { login } = require('../../Controllers/Auth/login');
 
+const {verifyLogin} = require('../../Controllers/Auth/login');
+
 const { verifyEmail } = require('../../Controllers/Auth/verify-email');
 
 const {
@@ -27,6 +29,7 @@ router.post(
 );
 
 router.post('/login', UserValidation.validateLogin, login);
+router.put('/login/verify', verifyLogin)
 
 router.get('/email/verify', verifyEmail);
 router.post(

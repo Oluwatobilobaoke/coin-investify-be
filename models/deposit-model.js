@@ -8,15 +8,19 @@ module.exports = (sequelize, DataTypes) => {
       },
       depositStatus: {
         type: DataTypes.ENUM,
-        values: ['Approved', 'Disapproved', 'Pending'],
+        values: ['Approved', 'Cancelled', 'Pending'],
         allowNull: false,
         defaultValue: 'Pending',
       },
-      date: {
+      depositDate: {
         type: DataTypes.DATE,
         allowNull: true,
       },
       dateConfirmed: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      matureDate: {
         type: DataTypes.DATE,
         allowNull: true,
       },

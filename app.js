@@ -18,7 +18,6 @@ const { authRouter } = require('./Routes/Auth/index');
 
 // Routes calls end
 const { errorHandler } = require('./Middleware/error-handler');
-
 const app = express();
 
 app.use(logger('dev'));

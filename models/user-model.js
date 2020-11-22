@@ -37,11 +37,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     },
-    phoneNumber: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
+    // phoneNumber: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    //   unique: true,
+    // },
     password: {
       type: DataTypes.STRING(250),
       allowNull: false,
@@ -79,20 +79,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    twoFactorCode: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    twofactorExpires: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+    // twoFactorCode: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
+    // twofactorExpires: {
+    //   type: DataTypes.DATE,
+    //   allowNull: true,
+    // },
     referralId: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     resetPasswordToken: DataTypes.STRING,
     resetPasswordExpire: DataTypes.BIGINT,
+    loginToken: DataTypes.INTEGER,
+    loginTokenExpire: DataTypes.BIGINT,
 	});
 	
 	User.associate = (model) => {

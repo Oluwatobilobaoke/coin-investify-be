@@ -10,11 +10,11 @@ class UserValidation {
 			{
 				firstName: Format.firstName,
 				lastName: Format.lastName,
-				country: Format.text,
-				phoneNumber: Format.phoneNo,
+				// country: Format.text,
+				// phoneNumber: Format.phoneNo,
 				email: Format.email,
 				password: Format.password,
-				btcWallet: Format.textOptional,
+				// btcWallet: Format.textOptional,
 			},
 			{}
 		);

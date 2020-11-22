@@ -85,7 +85,7 @@ const forgotPassword = async (req, res) => {
     });
     return successResMsg(res, 201, { message: 'Reset password email sent' });
   } catch (error) {
-    logger.log(error);
+    logger.error(error);
     return errorResMsg(res, 500, 'it is us, not you. Please try again');
   }
 };

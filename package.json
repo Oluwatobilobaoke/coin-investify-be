@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^7.13.0",
+    "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.6",
@@ -39,12 +39,12 @@
     "mysql2": "^2.2.5",
     "node-cron": "^2.0.3",
     "node-forge": "^0.10.0",
-    "nodemailer": "^6.4.15",
-    "pg": "^8.5.0",
+    "nodemailer": "^6.4.16",
+    "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "redis": "^3.0.2",
     "sequelize": "^6.3.5",
-    "sequelize-auto-migrations": "^1.0.3",
+    "sequelize-auto-migrations": "github:scimonster/sequelize-auto-migrations#a063aa6535a3f580623581bf866cef2d609531ba",
     "uuidv4": "^6.2.5"
   }
 }

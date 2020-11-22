@@ -21,6 +21,9 @@ module.exports = {
       attributes: attributesTalents,
     });
   },
+  getUserIpAddress: async (email) => {
+    return model.User.findOne({ where: { LastSignInIp }})
+  },
   updateActivityTracking: async (userInstance, ipAddress) => {
     const user = userInstance;
     user.signInCount += 1;
@@ -51,6 +54,13 @@ module.exports = {
     return model.User.findOne({
       where: {
         resetPasswordToken,
+      },
+    });
+  },
+  getUserByloginToken: async (loginToken) => {
+    return model.User.findOne({
+      where: {
+        loginToken,
       },
     });
   },
