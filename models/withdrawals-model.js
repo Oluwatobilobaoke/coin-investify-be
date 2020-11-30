@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       withdrawalStatus: {
         type: DataTypes.ENUM,
-        values: ['Approved', 'Disapproved', 'Pending'],
+        values: ['Successfull', 'Disapproved', 'Pending'],
         allowNull: false,
         defaultValue: 'Pending',
       },

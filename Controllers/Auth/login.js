@@ -25,7 +25,6 @@ const cache = new Cache();
 const returnUser = async (req, res, email, password, user) => {
   try {
     // let isEmployer = false;
-    let verificationStatus = 'Pending';
 
     // if (user && user.roleId === Role.Employer) {
     //   isEmployer = true;
