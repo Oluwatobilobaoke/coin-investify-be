@@ -4,7 +4,7 @@ const inquirer = require('inquirer');
 const { v4 } = require('uuid');
 const chalk = require('chalk');
 
-const model = require('../../Models');
+const model = require('../../models');
 
 const { updateUser } = require('../../Controllers/dao/impl/db/user')
 
