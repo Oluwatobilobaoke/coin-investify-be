@@ -11,11 +11,21 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0,
       },
+      coinType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'BTC'
+      },
+      WalletAddress: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        defaultValue: 'Your Wallet Address'
+      },
       withdrawalStatus: {
         type: DataTypes.ENUM,
-        values: ['Successfull', 'Disapproved', 'Pending'],
+        values: ['Successfull', 'Cancelled', 'Disapproved', 'Processing'],
         allowNull: false,
-        defaultValue: 'Pending',
+        defaultValue: 'Processing',
       },
       withdrawalId: {
         type: DataTypes.STRING,

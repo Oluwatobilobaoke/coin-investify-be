@@ -28,11 +28,15 @@ module.exports = {
   updateWithdrawalStatus: async (withdrawalId) => {
     return model.Withdrawal.update({ withdrawalStatus: 'Successfull' }, { where: { withdrawalId } });
   },
+
+  cancelWithdrawalStatus: async (withdrawalId) => {
+    return model.Withdrawal.update({ withdrawalStatus: 'Cancelled' }, { where: { withdrawalId } });
+  },
   updateWithdrawal: async (clause, data) => {
     return model.Withdrawal.update({ ...data }, { where: { ...clause } });
   },
   updateInvestorWithdrawalData: async (data, WithdrawalId) => {
-    return model.Withdrawal.update(data, { where: { WithdrawalId } });
+    return model.Withdrawal.update(data, { where: { withdrawalId } });
   },
   getAllWithdrawals: async (limit, offset) => {
     return model.Withdrawal.findAndCountAll({
@@ -49,10 +53,10 @@ module.exports = {
 			offset,
 		});
 	},
-	getAllPendingWithdrawals: async (limit, offset) => {
+	getAllProcessingWithdrawals: async (limit, offset) => {
     return model.Withdrawal.findAndCountAll({
 			where: {
-				withdrawalStatus: 'Pending'
+				withdrawalStatus: 'Processing'
 			},
 			limit,
 			offset,
@@ -68,10 +72,10 @@ module.exports = {
 		});
   },
   deleteWithdrawalById: async (WithdrawalId) => {
-    return model.Withdrawal.destroy({ where: { WithdrawalId } });
+    return model.Withdrawal.destroy({ where: { withdrawalId } });
   },
-  getWithdrawalAttributes: async (WithdrawalId, attributes) => {
-    return model.Withdrawal.findOne({ where: { WithdrawalId }, attributes });
+  getWithdrawalAttributes: async (withdrawalId, attributes) => {
+    return model.Withdrawal.findOne({ where: { withdrawalId }, attributes });
   },
   getAllTalents: async (attributes) => {
     return model.Withdrawal.findAll({

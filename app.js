@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const cors = require('cors');
 const logger = require('morgan');
 const dotenv = require('dotenv');
+
 const { key } = require('./Utils/libs/gen-key');
 
 dotenv.config();
@@ -15,6 +16,7 @@ const db = require('./models');
 const { seedSuperAdmin } = require('./Utils/libs/seed');
 const { index } = require('./Routes/home');
 const { authRouter } = require('./Routes/Auth/index');
+const { investorRouter } = require('./Routes/Investor/index');
 
 // Routes calls end
 const { errorHandler } = require('./Middleware/error-handler');
@@ -32,6 +34,7 @@ db.sequelize.sync().then(async () => {
 // ************ REGISTER ROUTES HERE ********** //
 app.use('/v1', index);
 app.use('/v1/auth', authRouter);
+app.use('/v1/investor', investorRouter);
 
 // ************ END ROUTE REGISTRATION ********** //
 

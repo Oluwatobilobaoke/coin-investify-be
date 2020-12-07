@@ -4,8 +4,8 @@ module.exports = {
   getUserByEmail: async (email) => {
     return model.User.findOne({ where: { email } });
   },
-  getUserById: async (hngId) => {
-    return model.User.findOne({ where: { hngId } });
+  getUserById: async (userId) => {
+    return model.User.findOne({ where: { userId } });
   },
   getUserByPhoneNumber: async (phoneNumber) => {
     return model.User.findOne({ where: { phoneNumber } });
@@ -41,7 +41,7 @@ module.exports = {
   updateUser: async (clause, data) => {
     return model.User.update({ ...data }, { where: { ...clause } });
   },
-  updateTalentUserData: async (data, userId) => {
+  updateInvestorUserData: async (data, userId) => {
     return model.User.update(data, { where: { userId } });
   },
   getUserById: async (userId) => {
@@ -86,5 +86,8 @@ module.exports = {
       where: { roleId: 'ROL-EMPLOYEE', profileCreated: true },
       attributes,
     });
+  },
+  contactUs: async (data) => {
+    return model.Contact.create(data);
   },
 };

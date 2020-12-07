@@ -3,8 +3,7 @@ const {sendEmail} = require('../../Utils/libs/send-mail');
 const {
     getUserByEmail,
     createUser,
-    getUserByPhoneNumber,
-} = require('../dao/impl/db/user');
+    } = require('../dao/impl/db/user');
 
 const { hashPassword } = require('../../Utils/libs/password');
 const { successResMsg, errorResMsg } = require('../../Utils/libs/response');
@@ -27,9 +26,9 @@ const investorRegistration = async (req, res) => {
 		firstName,
 		lastName,
 		email,
-		country,
+		// country,
 		// phoneNumber,
-		btcWallet,
+		// btcWallet,
 		password,
 	} = req.body;
 
@@ -42,6 +41,7 @@ const investorRegistration = async (req, res) => {
 		
 	const hashedPassword = hashPassword(password);
 	const userId = v4();
+	
 
 	const data = {
 		email,

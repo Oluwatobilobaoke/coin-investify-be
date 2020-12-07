@@ -9,9 +9,14 @@ const sendEmail = async (options) => {
       pass: process.env.COIN_INVESTIFY_SMTP_PASSWORD,
     },
   });
+
+  let adminEmail = process.env.COIN_INVESTIFY_TO_EMAIL,
+   mailingList = [ options.email, adminEmail];
+  
   const message = {
     from: `${process.env.COIN_INVESTIFY_EMAIL_FROM_NAME} <${process.env.COIN_INVESTIFY_FROM_EMAIL}>`,
-    to: options.email,
+    // to: options.email,
+    to: mailingList,
     subject: options.subject,
     html: options.message,
   };

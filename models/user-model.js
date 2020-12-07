@@ -25,23 +25,18 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     country: {
-      type: DataTypes.STRING(250),
+      type: DataTypes.STRING(50),
       allowNull: true,
 		},
-		btcWallet: {
-      type: DataTypes.STRING(255),
+		btcWalletAddress: {
+      type: DataTypes.STRING(50),
       allowNull: true,
     },
     walletBalance: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(15,2),
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 0.00,
     },
-    // phoneNumber: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    //   unique: true,
-    // },
     password: {
       type: DataTypes.STRING(250),
       allowNull: false,

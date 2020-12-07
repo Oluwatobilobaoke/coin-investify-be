@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "db:makemigrations": "./node_modules/sequelize-auto-migrations/bin/makemigration.js --name",
     "lint": "eslint Middleware/* models/* Utils/* Controllers/* Routes/*  server.js",
     "lint-fix": "eslint Middleware/* models/* Utils/* Controllers/* Routes/* server.js --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,6 +26,7 @@
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
+    "coinbase-commerce-node": "^1.0.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -35,6 +35,8 @@
     "inquirer": "^7.3.3",
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "moment-business-days": "^1.2.0",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
     "node-cron": "^2.0.3",
