@@ -4,7 +4,7 @@ const {sendEmail} = require('../Utils/libs/send-mail');
 
 
 
-const home = (res) => {
+const home = (req, res) => {
   res.status(200).json({ message: 'Welcome to Coin-Investify API' });
 };
 

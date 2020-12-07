@@ -215,9 +215,6 @@ module.exports.getDeposit = async (req, res) => {
 module.exports.depositListener = async (req, res) => {
   try {
 
-   const verifier = Webhook.verifySigHeader(req.body, request.headers['x-cc-webhook-signature'], webhookSecret);
-   console.log('Successfully verified', verifier);
-
     const {event} = req.body;
 
     console.log('passed 1', event);
@@ -226,7 +223,7 @@ module.exports.depositListener = async (req, res) => {
     const dataa = {
       type: event.type,
       code: event.data.code,
-      status: event.data.timeline,
+      timelineStatus: event.data.timeline,
       id: event.id,
       dateConfirmed: event.data.confirmed_at,
     };

@@ -35,7 +35,10 @@ module.exports = {
 
   
   updateDepositDateStatus: async (txnCode, date) => {
-    const dateToMature = moment(date, 'YYYY-MM-DD').nextBusinessDay(25)._d;
+    const dateOnly = date.splice(0,10);
+    console.log('dateonly', dateOnly);
+    const dateToMature = moment(dateOnly, 'YYYY-MM-DD').nextBusinessDay(25)._d;
+    console.log('mature', dateToMature);
     return model.Deposit.update({ dateConfirmed: date, matureDate: dateToMature }, { where: { txnCode } });
   },
 
