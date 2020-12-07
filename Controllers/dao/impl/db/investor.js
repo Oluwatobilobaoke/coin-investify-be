@@ -1,4 +1,4 @@
-const model = require('../../../../Models/index');
+const model = require('../../../../models/index');
 const { getActivities } = require('./activity');
 const redisKeys = require('../redis/redis-key-gen');
 

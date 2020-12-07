@@ -1,4 +1,4 @@
-const model = require('../../../../Models/index');
+const model = require('../../../../models/index');
 
 module.exports = {
   getActivities: async (userId) => {
