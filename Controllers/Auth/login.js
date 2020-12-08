@@ -35,21 +35,22 @@ const returnUser = async (req, res, email, password, user) => {
     // }
 
     // TODO: uncomment line 35 - 49 when email has been resolved, same with line 17
-    // if (user.status === '0') {
-    //   if (user.roleId === Role.Employee)
-    //     return errorResMsg(
-    //       res,
-    //       401,
-    //       'User is not verified! Complete email verification to continue.'
-    //     );
-    //   const userSubscription = await getUserSubscription(user.userId);
-    //   if ((userSubscription && userSubscription.plan === 'free') || !userSubscription)
-    //     return errorResMsg(
-    //       res,
-    //       401,
-    //       'User is not verified! Complete email verification to continue.'
-    //     );
-    // }
+    if (user.status === '0') {
+      //console.log(user.status);
+     // if (user.roleId === Role.Investor)
+        return errorResMsg(
+          res,
+          401,
+          'User is not verified! Complete email verification to continue.'
+        );
+      // const userSubscription = await getUserSubscription(user.userId);
+      // if ((userSubscription && userSubscription.plan === 'free') || !userSubscription)
+      //   return errorResMsg(
+      //     res,
+      //     401,
+      //     'User is not verified! Complete email verification to continue.'
+      //   );
+    }
 
     if (user.block) {
       return errorResMsg(
@@ -72,7 +73,7 @@ const returnUser = async (req, res, email, password, user) => {
       // SET sign in location and time
       const currentUser = await getUserByEmail(email);
       const lastLoginIp = currentUser.dataValues.currentSignInIp;
-      console.log(`here is lastloginIp: ${lastLoginIp}`);
+      console.log(`here is lastloginIp: ${lastLoginIp}`); //TODO Dont forget to remove this line in production
       const ipAddress = getIp(req);
       console.log('here is the ip address', ipAddress)  //TODO Dont forget to remove this line in production
 
@@ -105,8 +106,8 @@ const returnUser = async (req, res, email, password, user) => {
               message: `
                 Hello ${currentUser.dataValues.firstName}, We detected a login attempt from this ip address, ${ipAddress}, here is 6 verification code
                 ${loginTokenMessage}`
-            });
-            console.log('Broski is it you??, why are you using another person\'s ride', loginToken);
+            });   //TODO Dont forget to use a better template in production
+            console.log('Broski is it you??, why are you using another person\'s ride', loginToken); //TODO Dont forget to remove this line in production
             return successResMsg(res, 201, { message: 'Login Token has been sent to your email' });
           } catch (error) {
             logger.error(error);

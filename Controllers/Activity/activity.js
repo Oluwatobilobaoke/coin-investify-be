@@ -24,7 +24,7 @@ const getActivity = async (req, res) => {
 
     // Setting data to cache ✔
     client.set(activityKey, JSON.stringify(activities));
-    const data = { message: 'Employee profile view recorded', activities };
+    const data = { message: 'Activities recorded', activities };
     client.hmset(dashboardKeyId, {
       activities: JSON.stringify(activities),
     });

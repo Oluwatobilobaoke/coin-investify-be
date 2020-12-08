@@ -1,6 +1,6 @@
 const axios = require('axios');
 const Webhook = require('coinbase-commerce-node').Webhook;
-const webhookSecret = process.env.COIN_INVESTIFY_COIN_BASE_WEBHOOK;
+const sharedSecret = process.env.COIN_INVESTIFY_COIN_BASE_WEBHOOK;
 const moment = require('moment');
 const {sendEmail} = require('../../Utils/libs/send-mail');
 
@@ -157,18 +157,6 @@ module.exports.initiateDepositCharge = async (req, res) => {
 	return false;
 };
 
-// WIP
-// module.exports.updateDeposit = async (req, res) => {
-//   try {
-//     const {userId, depositID} = req.params;
-    
-    
-//   } catch (error) {
-//     logger.error(error);
-// 		return errorResMsg(res, 500, 'it is us, not you. Please try again');
-// 	}
-// 	return false;
-// };
 
 module.exports.getAllDeposits = async (req, res) => {
   
@@ -216,6 +204,15 @@ module.exports.depositListener = async (req, res) => {
   try {
 
     const {event} = req.body;
+          const signature = 'X-CC-Webhook-Signature';
+
+          try {
+            Webhook.verifySigHeader(event, signature, sharedSecret);
+            console.log('Successfully verified');
+          } catch(error) {
+            console.log('Failed');
+            console.log(error);
+          }
 
     console.log('passed 1', event);
 

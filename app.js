@@ -15,6 +15,7 @@ const db = require('./models');
 // Routes calls
 const { seedSuperAdmin } = require('./Utils/libs/seed');
 const { index } = require('./Routes/home');
+const { activityRouter } = require('./Routes/activity/index')
 const { authRouter } = require('./Routes/Auth/index');
 const { investorRouter } = require('./Routes/Investor/index');
 
@@ -33,6 +34,7 @@ db.sequelize.sync().then(async () => {
 
 // ************ REGISTER ROUTES HERE ********** //
 app.use('/v1', index);
+app.use('/v1/activity', activityRouter);
 app.use('/v1/auth', authRouter);
 app.use('/v1/investor', investorRouter);
 
