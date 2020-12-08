@@ -4,7 +4,7 @@ const { authorize } = require('../../Middleware/index');
 const {
   getActivity,
   deleteActivity,
-} = require('../../Controllers/activity/activity');
+} = require('../../Controllers/Activity/activity');
 
 const router = express.Router();
 
