@@ -1,8 +1,8 @@
 const model = require('../../../../models');
 
 module.exports = {
-  getAReferralById: async (ReferralId) => {
-    return model.Referral.findOne({ where: { ReferralId } });
+  getAReferralById: async (referralId) => {
+    return model.Referral.findOne({ where: { referralId } });
   },
   getReferralByUserId: async (userId) => {
     return model.Referral.findOne({ where: { userId } });
@@ -20,22 +20,20 @@ module.exports = {
   createReferral: async (data) => {
     return model.Referral.create(data);
   },
-  // getInvestorWithAttributes: async (attributesTalents) => {
-  //   return model.Referral.findAll({
-  //     // TODO: bring line 19 back when email for email verification is settled
-  //     // where: { status: '1', roleId: 'ROL-EMPLOYEE' },
-  //     where: { roleId: 'ROL-INVESTOR' },
-  //     attributes: attributesTalents,
-  //   });
-  // },
-  updateReferralStatus: async (ReferralId) => {
-    return model.Referral.update({ ReferralStatus: 'Successfull' }, { where: { ReferralId } });
+  updateReferralActivity: async (referralInstance) => {
+    const referral = referralInstance;
+    referral.referralCount += 1;
+
+    referral.save();
+  },
+  updateReferralStatus: async (referralId) => {
+    return model.Referral.update({ ReferralStatus: 'Successfull' }, { where: { referralId } });
   },
   updateReferral: async (clause, data) => {
     return model.Referral.update({ ...data }, { where: { ...clause } });
   },
-  updateInvestorReferralData: async (data, ReferralId) => {
-    return model.Referral.update(data, { where: { ReferralId } });
+  updateInvestorReferralData: async (data, referralId) => {
+    return model.Referral.update(data, { where: { referralId } });
   },
   getAllReferrals: async (limit, offset) => {
     return model.Referral.findAndCountAll({
@@ -70,11 +68,11 @@ module.exports = {
 			offset,
 		});
   },
-  deleteReferralById: async (ReferralId) => {
-    return model.Referral.destroy({ where: { ReferralId } });
+  deleteReferralById: async (referralId) => {
+    return model.Referral.destroy({ where: { referralId } });
   },
-  getReferralAttributes: async (ReferralId, attributes) => {
-    return model.Referral.findOne({ where: { ReferralId }, attributes });
+  getReferralAttributes: async (referralId, attributes) => {
+    return model.Referral.findOne({ where: { referralId }, attributes });
   },
   getAllTalents: async (attributes) => {
     return model.Referral.findAll({

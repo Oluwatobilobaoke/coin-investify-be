@@ -1,9 +1,16 @@
 const { v4 } = require('uuid');
+const shortid = require('shortid');
 const {sendEmail} = require('../../Utils/libs/send-mail');
 const {
     getUserByEmail,
     createUser,
-    } = require('../dao/impl/db/user');
+	} = require('../dao/impl/db/user');
+	
+const {
+	getAReferralById,
+	updateReferralActivity,
+	createReferral,
+} = require('../dao/impl/db/referral');
 
 const { hashPassword } = require('../../Utils/libs/password');
 const { successResMsg, errorResMsg } = require('../../Utils/libs/response');
@@ -22,27 +29,50 @@ const URL =
 
 const investorRegistration = async (req, res) => {
 
-  const {
+	const { ref } = req.query;
+
+
+	let referrer;
+
+ 	 const {
 		firstName,
 		lastName,
 		email,
-		// country,
-		// phoneNumber,
-		// btcWallet,
 		password,
+		referrerCode,
 	} = req.body;
 
+
+		
+	if(!ref && !referrerCode){
+		referrer = 'No-Referral'
+	} else if (ref || referrerCode) {
+		referrer = req.query.ref || referrerCode;
+	}
+
+	
 	const userExists = await getUserByEmail(email);
-	// const userPhoneExists = await getUserByPhoneNumber(phoneNumber);
+	
+
 	if (userExists && userExists.email === email)
 		return errorResMsg(res, 403, 'Email is already exist');
-	// if (userPhoneExists && userPhoneExists.phoneNumber === phoneNumber)
-  	// return errorResMsg(res, 403, 'phone number is not available');
+
+
+	if (referrer !== "No-Referral") {
+		const findReferral = await getAReferralById(referrer);
+
+		if (!findReferral)
+			return errorResMsg(res, 403, 'Referral does not exist, kindly check your url')
+		const currentReferral = findReferral;
+
+		await updateReferralActivity(currentReferral);
+
+	};
 		
 	const hashedPassword = hashPassword(password);
 	const userId = v4();
+	const referralId = shortid.generate();
 	
-
 	const data = {
 		email,
 	};
@@ -55,11 +85,21 @@ const investorRegistration = async (req, res) => {
 		email,
 		password: hashedPassword,
 		roleId: 'ROL-INVESTOR',
+		referralId,
+		referrer,
 		userId,
 	};
 
+	console.log('pass8', userInformation);
+
+	const referralInformation = {
+		referralId,
+		userId,
+	}
+
 	try {
 		await createUser(userInformation);
+		await createReferral(referralInformation)
 
     const verificationUrl = `${URL}/auth/email/verify/?verification_token=${token}`;
 		await sendEmail({

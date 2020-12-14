@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const chalk = require('chalk');
 const app = require('./app');
-// const { cronRunner, jobToRunOnTheTenthHourEveryDay } = require('./Utils/libs/cron-job');
+const { roiPerDayCron, initiateRemittance } = require('./Jobs/roiJob');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -31,5 +31,6 @@ const server = app.listen(port, async () => {
   const bind = typeof address === 'string' ? `pipe ${address}` : `port ${port}`;
   console.log(`Listening on ${chalk.green(bind)}`);
   // console.log(`Listening on ${chalk.yellow(port)}`);
-  //  cronRunner('0 10 * * *', jobToRunOnTheTenthHourEveryDay);
+  initiateRemittance();
+  roiPerDayCron();
 });

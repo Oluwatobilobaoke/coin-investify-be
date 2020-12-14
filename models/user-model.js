@@ -84,6 +84,9 @@ module.exports = (sequelize, DataTypes) => {
     // },
     referralId: {
       type: DataTypes.STRING,
+    },
+    referrer: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
     resetPasswordToken: DataTypes.STRING,
@@ -102,6 +105,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
 		});
     
+    User.hasMany(model.Referral, {
+      onDelete: 'cascade',
+		});
+
     User.belongsTo(model.Role, {
       foreignKey: 'roleId',
     });

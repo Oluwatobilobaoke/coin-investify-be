@@ -13,7 +13,8 @@ class UserValidation {
 				// country: Format.text,
 				// phoneNumber: Format.phoneNo,
 				email: Format.email,
-				password: Format.password,
+        password: Format.password,
+        referrerCode: Format.textOptional
 				// btcWallet: Format.textOptional,
 			},
 			{}

@@ -23,7 +23,13 @@ const {
 const router = express.Router();
 
 router.post(
-  '/register/',
+  '/register/:ref',
+  UserValidation.validateInvestor,
+  investorRegistration
+);
+
+router.post(
+  '/register',
   UserValidation.validateInvestor,
   investorRegistration
 );

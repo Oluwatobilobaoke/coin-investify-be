@@ -3,7 +3,7 @@ const Webhook = require('coinbase-commerce-node').Webhook;
 const sharedSecret = process.env.COIN_INVESTIFY_COIN_BASE_WEBHOOK;
 const moment = require('moment');
 const {sendEmail} = require('../../Utils/libs/send-mail');
-
+const adminEmail = process.env.COIN_INVESTIFY_TO_EMAIL,
 const { successResMsg, errorResMsg } = require('../../Utils/libs/response');
 
 const logger = require('../../logger').Logger;
@@ -29,6 +29,7 @@ const {
   createDeposit,
   updateDepositStatus,
   getDepositAttributes,
+  updateInterestPerday,
 } = require('../../Controllers/dao/impl/db/deposit');
 
 const depositPublicAttributes = [
@@ -54,7 +55,6 @@ const depositAttributes = [
 
 const actionDate = moment().format();
 
-// ===== WIP =======  //
 module.exports.initiateDepositCharge = async (req, res) => {
   
   try {
@@ -128,7 +128,7 @@ module.exports.initiateDepositCharge = async (req, res) => {
     const depositQuery = await createDeposit(objectToBeSaved);
 
     const deposit = depositQuery.dataValues;
-    // console.log(deposit);
+  
 
     await sendEmail({
       email,
@@ -139,7 +139,7 @@ module.exports.initiateDepositCharge = async (req, res) => {
     // console.log('passed here 2', deposit);
 
 
-    const dataa = {
+    const CoinbaseDataObj = {
       "message": "Deposit initiated successfully",
       deposit,
       expiresIn: depositCharge.expires_at,
@@ -147,7 +147,7 @@ module.exports.initiateDepositCharge = async (req, res) => {
 
     await recordActivity(res, userId, 'create', `You initiated a Deposit As AT ${actionDate}`);
 
-    return successResMsg(res, 201, dataa);
+    return successResMsg(res, 201, CoinbaseDataObj);
 
         
   } catch (error) {
@@ -204,47 +204,49 @@ module.exports.depositListener = async (req, res) => {
   try {
 
     const {event} = req.body;
-          const signature = 'X-CC-Webhook-Signature';
+          // const signature = 'X-CC-Webhook-Signature';
 
-          try {
-            Webhook.verifySigHeader(event, signature, sharedSecret);
-            console.log('Successfully verified');
-          } catch(error) {
-            console.log('Failed');
-            console.log(error);
-          }
+          // try {
+          //   Webhook.verifySigHeader(event, signature, sharedSecret);
+          //   console.log('Successfully verified');
+          // } catch(error) {
+          //   console.log('Failed');
+          //   console.log(error);
+          // }
 
     console.log('passed 1', event);
 
     
-    const dataa = {
+    const CoinbaseDataObj= {
       type: event.type,
       code: event.data.code,
       timelineStatus: event.data.timeline,
       id: event.id,
       dateConfirmed: event.data.confirmed_at,
+      amount: event.data.pricing.local.amount,
     };
 
-    console.log('passed 2', data);
+    console.log('passed 2', CoinbaseDataObj);
 
 
     async function updateStatusFromCharge() {
-      switch (dataa.type) {
+      switch (CoinbaseDataObj.type) {
         case 'charge:confirmed':
-          await updateDepositStatus(dataa.code, 'Successfull');
-          await updateDepositDateStatus(dataa.code, data.dateConfirmed)
+          await updateDepositStatus(CoinbaseDataObj.code, 'Successfull');
+          await updateDepositDateStatus(CoinbaseDataObj.code, CoinbaseDataObj.dateConfirmed)
+          await updateInterestPerday(CoinbaseDataObj.code, CoinbaseDataObj.amount);
           break;
         case 'charge:pending':
-          await updateDepositStatus(dataa.code, 'Pending');
+          await updateDepositStatus(CoinbaseDataObj.code, 'Pending');
           break;
         case 'charge:created':
-          await updateDepositStatus(dataa.code, 'Created');
+          await updateDepositStatus(CoinbaseDataObj.code, 'Created');
           break;
         case 'charge:failed':
-          await updateDepositStatus(dataa.code, 'Failed');
+          await updateDepositStatus(CoinbaseDataObj.code, 'Failed');
           break;
         case 'charge:delayed':
-          await updateDepositStatus(dataa.code, 'Delayed');
+          await updateDepositStatus(CoinbaseDataObj.code, 'Delayed');
           break;
         default:
           break;

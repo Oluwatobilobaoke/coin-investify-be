@@ -29,7 +29,7 @@ const verifyEmail = async (req, res) => {
         const dataInfo = { message: 'This email has already been verified' };
         return successResMsg(res, 200, dataInfo);
       }
-      // const zuriTalentUserId = genZuriId(user.id);
+      
       const status = '1';
 
       const dataToUpdate = { status };

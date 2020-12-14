@@ -1,6 +1,8 @@
 const model = require('../../../../models');
 const moment = require('moment-business-days');
 
+const interestRate = process.COIN_INVESTIFY_INVESTMENT_PERCENTAGE / process.env.COIN_INVESTIFY_INVESTMENT_DAYS;
+console.log(interestRate);
 module.exports = {
   getADepositById: async (depositId) => {
     return model.Deposit.findOne({ where: { depositId } });
@@ -37,9 +39,14 @@ module.exports = {
   updateDepositDateStatus: async (txnCode, date) => {
     const dateOnly = date.splice(0,10);
     console.log('dateonly', dateOnly);
-    const dateToMature = moment(dateOnly, 'YYYY-MM-DD').nextBusinessDay(25)._d;
+    const dateToMature = moment(dateOnly, 'YYYY-MM-DD').nextBusinessDay(26)._d;
     console.log('mature', dateToMature);
-    return model.Deposit.update({ dateConfirmed: date, matureDate: dateToMature }, { where: { txnCode } });
+    return model.Deposit.update({ dateConfirmed: date, matureDate: dateToMature, isActive: true, daysLeftToMature: 26 }, { where: { txnCode } });
+  },
+
+  updateInterestPerday: async (txnCode, amountInUsd) => {
+    const interestPerDay = amountInUsd * interestRate;
+    return model.Deposit.update({ interestPerDay }, { where: { txnCode }});
   },
 
   updateDeposit: async (clause, data) => {

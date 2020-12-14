@@ -28,20 +28,35 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    isClosed: {
+    isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false,
     },
+    daysLeftToMature: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
     amountInUsd: {
       type: DataTypes.DECIMAL(15,2),
       allowNull: false,
-      defaultValue: 0.000,
+      defaultValue: 0.00,
     },
     amountInBtc: {
       type: DataTypes.DECIMAL(15,6),
       allowNull: false,
       defaultValue: 0.000,
+    },
+    interestPerDay: {
+      type: DataTypes.DECIMAL(15,2),
+      allowNull: false,
+      defaultValue: 0.00,
+    },
+    accruedInterest: {
+      type: DataTypes.DECIMAL(15,2),
+      allowNull: false,
+      defaultValue: 0.00,
     },
     depositId: {
       type: DataTypes.STRING,
