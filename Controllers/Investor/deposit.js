@@ -3,7 +3,8 @@ const Webhook = require('coinbase-commerce-node').Webhook;
 const sharedSecret = process.env.COIN_INVESTIFY_COIN_BASE_WEBHOOK;
 const moment = require('moment');
 const {sendEmail} = require('../../Utils/libs/send-mail');
-const adminEmail = process.env.COIN_INVESTIFY_TO_EMAIL,
+const adminEmail = process.env.COIN_INVESTIFY_TO_EMAIL;
+
 const { successResMsg, errorResMsg } = require('../../Utils/libs/response');
 
 const logger = require('../../logger').Logger;
