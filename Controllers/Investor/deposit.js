@@ -37,6 +37,8 @@ const depositPublicAttributes = [
   'depositStatus',
   'depositDate',
   'dateConfirmed',
+  'interestPerDay',
+  'accruedInterest',
   'matureDate',
   'coinType',
   'amountInUsd',
@@ -206,9 +208,11 @@ module.exports.depositListener = async (req, res) => {
 
     const {event} = req.body;
 
+    const eventStringified = JSON.stringify(event);
+
     try {
       Webhook.verifyEventBody(
-      event,
+       eventStringified,
       req.headers['x-cc-webhook-signature'],
       webhookSecret
       );
