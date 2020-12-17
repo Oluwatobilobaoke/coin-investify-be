@@ -209,8 +209,6 @@ module.exports.depositListener = async (req, res) => {
     const {event} = req.body;
 
     const eventStringified = JSON.stringify(req.body);
-    console.log('eventBody', JSON.stringify(event));
-    console.log("eventStringified", eventStringified);
 
     try {
       Webhook.verifyEventBody(
@@ -218,12 +216,14 @@ module.exports.depositListener = async (req, res) => {
       req.headers['x-cc-webhook-signature'],
       webhookSecret
       );
-      console.log('Successfully Verified');
+      console.log('Incoming Event being sent is Successfully Verified');
+      logger.info(eventStringified);
     } catch (error) {
       console.log('Webhook Error occurred', error.message);
     }
 
-    console.log('passed 1', event);
+    console.log('Passed WebHook Verification');
+    logger.critical(event);
 
     
     const CoinbaseDataObj= {
@@ -235,10 +235,7 @@ module.exports.depositListener = async (req, res) => {
       amount: event.data.pricing.local.amount,
     };
 
-    console.log('passed 2', CoinbaseDataObj);
     console.log('passed Date', CoinbaseDataObj.dateConfirmed);
-
-    const date = 
 
     async function updateStatusFromCharge(CoinbaseDataObj) {
       
@@ -253,23 +250,18 @@ module.exports.depositListener = async (req, res) => {
           await updateInterestPerday(data.code, data.amount);
           break;
         case 'charge:pending':
-          console.log('pending', data.type);
          await updateDepositStatus(data.code, 'Pending');
           break;
         case 'charge:created':
-          console.log('created', data.type);
           await updateDepositStatus(data.code, 'Created');
           break;
         case 'charge:failed':
-          console.log('failed', data.type);
           await updateDepositStatus(data.code, 'Expired');
           break;
         case 'charge:delayed':
-          console.log('delayed', data.type);
           await updateDepositStatus(data.code, 'Delayed');
           break;
         case 'charge:resolved':
-          console.log('resolved', data.type);
           await updateDepositStatus(data.code, 'Resolved');
           break;
         default:
@@ -279,8 +271,7 @@ module.exports.depositListener = async (req, res) => {
 
     updateStatusFromCharge(CoinbaseDataObj);
 
-    console.log('passed 3 DId it hoodlum FC');
-    
+      
   } catch (error) {
     logger.error(error);
   	return errorResMsg(res, 500, 'it is us, not you. Please try again');
