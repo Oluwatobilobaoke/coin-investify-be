@@ -214,10 +214,10 @@ const login = async (req, res) => {
     const keyId = redisKeys.getHashKey(`email:${email.toString()}`);
 
     const data = await cache.get(keyId); // fetch from cache
-    console.log('data', data);
+   //  console.log('data', data);
     if (!data) {
       const userData = await getUserByEmail(email);
-      console.log('userData', userData);
+    //  console.log('userData', userData);
       if (userData) {
         const user = userData.dataValues;
         return returnUser(req, res, email, password, user);

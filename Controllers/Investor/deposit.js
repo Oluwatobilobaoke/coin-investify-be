@@ -1,6 +1,6 @@
 const axios = require('axios');
 const Webhook = require('coinbase-commerce-node').Webhook;
-const sharedSecret = process.env.COIN_INVESTIFY_COIN_BASE_WEBHOOK;
+const webhookSecret = process.env.COIN_INVESTIFY_COIN_BASE_WEBHOOK;
 const moment = require('moment');
 const {sendEmail} = require('../../Utils/libs/send-mail');
 const adminEmail = process.env.COIN_INVESTIFY_TO_EMAIL;
@@ -205,15 +205,17 @@ module.exports.depositListener = async (req, res) => {
   try {
 
     const {event} = req.body;
-          // const signature = 'X-CC-Webhook-Signature';
 
-          // try {
-          //   Webhook.verifySigHeader(event, signature, sharedSecret);
-          //   console.log('Successfully verified');
-          // } catch(error) {
-          //   console.log('Failed');
-          //   console.log(error);
-          // }
+    try {
+      Webhook.verifyEventBody(
+      request.body,
+      request.headers['x-cc-webhook-signature'],
+      webhookSecret
+      );
+      console.log('Successfully Verified');
+    } catch (error) {
+      console.log('Webhook Error occurred', error.message);
+    }
 
     console.log('passed 1', event);
 
@@ -230,8 +232,11 @@ module.exports.depositListener = async (req, res) => {
     console.log('passed 2', CoinbaseDataObj);
 
 
-    async function updateStatusFromCharge() {
-      switch (CoinbaseDataObj.type) {
+    async function updateStatusFromCharge(CoinbaseDataObj) {
+      
+      const data = CoinbaseDataObj;
+      
+      switch (data.type) {
         case 'charge:confirmed':
           await updateDepositStatus(CoinbaseDataObj.code, 'Successfull');
           await updateDepositDateStatus(CoinbaseDataObj.code, CoinbaseDataObj.dateConfirmed)
@@ -254,7 +259,8 @@ module.exports.depositListener = async (req, res) => {
       }
     };
 
-    updateStatusFromCharge();
+    updateStatusFromCharge(CoinbaseDataObj);
+    
     console.log('passed 3 DId it hoodlum FC');
     
   } catch (error) {

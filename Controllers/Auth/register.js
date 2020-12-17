@@ -90,7 +90,7 @@ const investorRegistration = async (req, res) => {
 		userId,
 	};
 
-	console.log('pass8', userInformation);
+	
 
 	const referralInformation = {
 		referralId,
