@@ -208,11 +208,13 @@ module.exports.depositListener = async (req, res) => {
 
     const {event} = req.body;
 
-    const eventStringified = JSON.stringify(event);
+    const eventStringified = JSON.stringify(req.body);
+    console.log('eventBody', JSON.stringify(event));
+    console.log("eventStringified", eventStringified);
 
     try {
       Webhook.verifyEventBody(
-       eventStringified,
+        eventStringified,
       req.headers['x-cc-webhook-signature'],
       webhookSecret
       );
