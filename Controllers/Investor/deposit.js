@@ -211,65 +211,74 @@ module.exports.depositListener = async (req, res) => {
     const eventStringified = JSON.stringify(req.body);
 
     try {
-      Webhook.verifyEventBody(
+      const verified = Webhook.verifyEventBody(
         eventStringified,
       req.headers['x-cc-webhook-signature'],
       webhookSecret
       );
-      console.log('Incoming Event being sent is Successfully Verified');
+      console.log('Incoming Event being sent is Successfully Verified', verified);
+
       logger.info(eventStringified);
+
+      if (verified) {
+            const CoinbaseDataObj= {
+              type: event.type,
+              code: event.data.code,
+              timelineStatus: event.data.timeline,
+              id: event.id,
+              dateConfirmed: event.data.confirmed_at,
+              amount: event.data.pricing.local.amount,
+            };
+        
+            console.log('passed Date', CoinbaseDataObj.dateConfirmed);
+        
+            async function updateStatusFromCharge(CoinbaseDataObj) {
+              
+              const data = CoinbaseDataObj;
+              
+              switch (data.type) {
+                case 'charge:confirmed':
+                console.log('confirmed', data.type);
+                console.log('confirmedAt', data.dateConfirmed);
+                  await updateDepositStatus(data.code, 'Successfull');
+                  await updateDepositDateStatus(data.code, data.dateConfirmed)
+                  await updateInterestPerday(data.code, data.amount);
+                  break;
+                case 'charge:pending':
+                await updateDepositStatus(data.code, 'Pending');
+                  break;
+                case 'charge:created':
+                  await updateDepositStatus(data.code, 'Created');
+                  break;
+                case 'charge:failed':
+                  await updateDepositStatus(data.code, 'Expired');
+                  break;
+                case 'charge:delayed':
+                  await updateDepositStatus(data.code, 'Delayed');
+                  break;
+                case 'charge:resolved':
+                  await updateDepositStatus(data.code, 'Resolved');
+                  break;
+                default:
+                  break;
+              }
+            };
+        
+            updateStatusFromCharge(CoinbaseDataObj);
+            console.log('Passed WebHook Verification');
+           logger.critical(event);
+
+          } else {
+           return errorResMsg(res, 404, 'Alaye hahaha you failed hacker!!, SUCK my dick');
+          }
+          
     } catch (error) {
       console.log('Webhook Error occurred', error.message);
     }
-
-    console.log('Passed WebHook Verification');
-    logger.critical(event);
+   
 
     
-    const CoinbaseDataObj= {
-      type: event.type,
-      code: event.data.code,
-      timelineStatus: event.data.timeline,
-      id: event.id,
-      dateConfirmed: event.data.confirmed_at,
-      amount: event.data.pricing.local.amount,
-    };
-
-    console.log('passed Date', CoinbaseDataObj.dateConfirmed);
-
-    async function updateStatusFromCharge(CoinbaseDataObj) {
-      
-      const data = CoinbaseDataObj;
-      
-      switch (data.type) {
-        case 'charge:confirmed':
-         console.log('confirmed', data.type);
-         console.log('confirmedAt', data.dateConfirmed);
-          await updateDepositStatus(data.code, 'Successfull');
-          await updateDepositDateStatus(data.code, data.dateConfirmed)
-          await updateInterestPerday(data.code, data.amount);
-          break;
-        case 'charge:pending':
-         await updateDepositStatus(data.code, 'Pending');
-          break;
-        case 'charge:created':
-          await updateDepositStatus(data.code, 'Created');
-          break;
-        case 'charge:failed':
-          await updateDepositStatus(data.code, 'Expired');
-          break;
-        case 'charge:delayed':
-          await updateDepositStatus(data.code, 'Delayed');
-          break;
-        case 'charge:resolved':
-          await updateDepositStatus(data.code, 'Resolved');
-          break;
-        default:
-          break;
-      }
-    };
-
-    updateStatusFromCharge(CoinbaseDataObj);
+  
 
       
   } catch (error) {
