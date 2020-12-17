@@ -208,7 +208,7 @@ module.exports.depositListener = async (req, res) => {
 
     try {
       Webhook.verifyEventBody(
-      request.body,
+      event,
       request.headers['x-cc-webhook-signature'],
       webhookSecret
       );
@@ -238,21 +238,30 @@ module.exports.depositListener = async (req, res) => {
       
       switch (data.type) {
         case 'charge:confirmed':
-          await updateDepositStatus(CoinbaseDataObj.code, 'Successfull');
-          await updateDepositDateStatus(CoinbaseDataObj.code, CoinbaseDataObj.dateConfirmed)
-          await updateInterestPerday(CoinbaseDataObj.code, CoinbaseDataObj.amount);
+         console.log('confirmed', data.type);
+          await updateDepositStatus(data.code, 'Successfull');
+          await updateDepositDateStatus(data.code, data.dateConfirmed)
+          await updateInterestPerday(data.code, data.amount);
           break;
         case 'charge:pending':
-          await updateDepositStatus(CoinbaseDataObj.code, 'Pending');
+          console.log('pending', data.type);
+         await updateDepositStatus(data.code, 'Pending');
           break;
         case 'charge:created':
-          await updateDepositStatus(CoinbaseDataObj.code, 'Created');
+          console.log('created', data.type);
+          await updateDepositStatus(data.code, 'Created');
           break;
         case 'charge:failed':
-          await updateDepositStatus(CoinbaseDataObj.code, 'Failed');
+          console.log('failed', data.type);
+          await updateDepositStatus(data.code, 'Expired');
           break;
         case 'charge:delayed':
-          await updateDepositStatus(CoinbaseDataObj.code, 'Delayed');
+          console.log('delayed', data.type);
+          await updateDepositStatus(data.code, 'Delayed');
+          break;
+        case 'charge:resolved':
+          console.log('resolved', data.type);
+          await updateDepositStatus(data.code, 'Resolved');
           break;
         default:
           break;
@@ -260,7 +269,7 @@ module.exports.depositListener = async (req, res) => {
     };
 
     updateStatusFromCharge(CoinbaseDataObj);
-    
+
     console.log('passed 3 DId it hoodlum FC');
     
   } catch (error) {
