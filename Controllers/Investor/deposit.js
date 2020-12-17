@@ -230,6 +230,7 @@ module.exports.depositListener = async (req, res) => {
     };
 
     console.log('passed 2', CoinbaseDataObj);
+    console.log('passed 2', CoinbaseDataObj.dateConfirmed);
 
 
     async function updateStatusFromCharge(CoinbaseDataObj) {
@@ -239,6 +240,7 @@ module.exports.depositListener = async (req, res) => {
       switch (data.type) {
         case 'charge:confirmed':
          console.log('confirmed', data.type);
+         console.log('confirmedAt', data.dateConfirmed);
           await updateDepositStatus(data.code, 'Successfull');
           await updateDepositDateStatus(data.code, data.dateConfirmed)
           await updateInterestPerday(data.code, data.amount);
