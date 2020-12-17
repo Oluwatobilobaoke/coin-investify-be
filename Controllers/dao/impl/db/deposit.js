@@ -37,7 +37,7 @@ module.exports = {
 
   
   updateDepositDateStatus: async (txnCode, date) => {
-    const dateOnly = date.splice(0,10);
+    const dateOnly = date.slice(0,10);
     console.log('dateonly', dateOnly);
     const dateToMature = moment(dateOnly, 'YYYY-MM-DD').nextBusinessDay(26)._d;
     console.log('mature', dateToMature);

@@ -209,7 +209,7 @@ module.exports.depositListener = async (req, res) => {
     try {
       Webhook.verifyEventBody(
       event,
-      request.headers['x-cc-webhook-signature'],
+      req.headers['x-cc-webhook-signature'],
       webhookSecret
       );
       console.log('Successfully Verified');
@@ -230,8 +230,9 @@ module.exports.depositListener = async (req, res) => {
     };
 
     console.log('passed 2', CoinbaseDataObj);
-    console.log('passed 2', CoinbaseDataObj.dateConfirmed);
+    console.log('passed Date', CoinbaseDataObj.dateConfirmed);
 
+    const date = 
 
     async function updateStatusFromCharge(CoinbaseDataObj) {
       
