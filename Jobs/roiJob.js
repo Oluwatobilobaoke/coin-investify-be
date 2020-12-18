@@ -73,8 +73,11 @@ const initiateRemittance = async () => {
 				isActive: false,
 			};
 
+			const userData = await getUserById(userId);
+			const newBalance = userData.walletBalance + totalEarned;
+
 			const userWalletBalUpdate = {
-				walletBalance: totalEarned,
+				walletBalance: newBalance,
 			};
 
 			await updateDeposit({userId}, activeInvestmentData);

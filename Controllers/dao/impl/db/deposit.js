@@ -1,5 +1,6 @@
 const model = require('../../../../models');
-const moment = require('moment-business-days');
+const moments = require('moment-business-days');
+const moment = require('../../../../Utils/momentjs-business-master/momentjs-business.js');
 
 const interestRate = process.COIN_INVESTIFY_INVESTMENT_PERCENTAGE / process.env.COIN_INVESTIFY_INVESTMENT_DAYS;
 console.log(interestRate);
@@ -39,8 +40,16 @@ module.exports = {
   updateDepositDateStatus: async (txnCode, date) => {
     const dateOnly = date.slice(0,10);
     console.log('dateonly', dateOnly);
-    const dateToMature = moment(dateOnly, 'YYYY-MM-DD').nextBusinessDay(26)._d;
-    console.log('mature', dateToMature);
+    const dateToMature = moments(dateOnly, 'YYYY-MM-DD').nextBusinessDay(26)._d;
+    console.log('matureDAte', dateToMature);
+    const businessDays = moment(dateOnly).businessAdd(26);
+    console.log('buesineee', businessDays);
+
+    const dateToMature2 = moments(date, 'YYYY-MM-DD').nextBusinessDay(26)._d;
+    console.log('matureDAte2', dateToMature2);
+    const businessDays2 = moment(date).businessAdd(26);
+    console.log('buesineee2', businessDays2);
+    
     return model.Deposit.update({ dateConfirmed: date, matureDate: dateToMature, isActive: true, daysLeftToMature: 26 }, { where: { txnCode } });
   },
 
