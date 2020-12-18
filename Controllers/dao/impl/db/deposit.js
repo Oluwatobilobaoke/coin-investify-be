@@ -39,10 +39,11 @@ module.exports = {
   
   updateDepositDateStatus: async (txnCode, date) => {
     const dateOnly = date.slice(0,10);
-    console.log('dateonly', dateOnly);
-    const dateToMature = moments(dateOnly, 'YYYY-MM-DD').nextBusinessDay(26)._d;
+    let formattedDate = dateOnly.getDate() + "-" + (dateOnly.getMonth() + 1) + "-" + dateOnly.getFullYear();
+    console.log('dateonly, FormattedDate', dateOnly, formattedDate);
+    const dateToMature = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
     console.log('matureDAte', dateToMature);
-    const dateToMature2 = moments(date, 'YYYY-MM-DD').nextBusinessDay(26)._d;
+    const dateToMature2 = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
     console.log('matureDAte2', dateToMature2);
     return model.Deposit.update({ dateConfirmed: date, matureDate: dateToMature, isActive: true, daysLeftToMature: 26 }, { where: { txnCode } });
   },
