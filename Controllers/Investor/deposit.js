@@ -216,7 +216,7 @@ module.exports.depositListener = async (req, res) => {
       req.headers['x-cc-webhook-signature'],
       webhookSecret
       );
-      console.log('Incoming Event being sent is Successfully Verified', verified);
+      console.log('Incoming Event being sent is Successfully Verified');
 
       logger.info(eventStringified);
 

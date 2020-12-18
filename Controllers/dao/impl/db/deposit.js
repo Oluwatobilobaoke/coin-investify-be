@@ -42,14 +42,8 @@ module.exports = {
     console.log('dateonly', dateOnly);
     const dateToMature = moments(dateOnly, 'YYYY-MM-DD').nextBusinessDay(26)._d;
     console.log('matureDAte', dateToMature);
-    const businessDays = moment(dateOnly).businessAdd(26);
-    console.log('buesineee', businessDays);
-
     const dateToMature2 = moments(date, 'YYYY-MM-DD').nextBusinessDay(26)._d;
     console.log('matureDAte2', dateToMature2);
-    const businessDays2 = moment(date).businessAdd(26);
-    console.log('buesineee2', businessDays2);
-    
     return model.Deposit.update({ dateConfirmed: date, matureDate: dateToMature, isActive: true, daysLeftToMature: 26 }, { where: { txnCode } });
   },
 
