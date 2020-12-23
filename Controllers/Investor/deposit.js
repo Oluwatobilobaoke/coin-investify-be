@@ -165,7 +165,7 @@ module.exports.getAllDeposits = async (req, res) => {
   
   try {
     const {userId} = req.params;
-    console.log(userId);
+    
     const { page, size } = req.query;
     const { limit, offset } = getPagination(page, size);
     const allDeposits = await getAllDepositsFromSingleUser(userId, depositAttributes, limit, offset);
@@ -275,12 +275,7 @@ module.exports.depositListener = async (req, res) => {
     } catch (error) {
       console.log('Webhook Error occurred', error.message);
     }
-   
-
-    
   
-
-      
   } catch (error) {
     logger.error(error);
   	return errorResMsg(res, 500, 'it is us, not you. Please try again');

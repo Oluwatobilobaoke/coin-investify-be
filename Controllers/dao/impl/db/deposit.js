@@ -1,6 +1,4 @@
 const model = require('../../../../models');
-const moments = require('moment-business-days');
-const moment = require('../../../../Utils/momentjs-business-master/momentjs-business.js');
 
 const interestRate = process.COIN_INVESTIFY_INVESTMENT_PERCENTAGE / process.env.COIN_INVESTIFY_INVESTMENT_DAYS;
 console.log(interestRate);
@@ -36,15 +34,78 @@ module.exports = {
     return model.Deposit.update({ DepositStatus: status }, { where: { txnCode } });
   },
 
+
   
   updateDepositDateStatus: async (txnCode, date) => {
-    const dateOnly = date.slice(0,10);
-    let formattedDate = dateOnly.getDate() + "-" + (dateOnly.getMonth() + 1) + "-" + dateOnly.getFullYear();
-    console.log('dateonly, FormattedDate', dateOnly, formattedDate);
-    const dateToMature = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
-    console.log('matureDAte', dateToMature);
-    const dateToMature2 = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
-    console.log('matureDAte2', dateToMature2);
+    // const dateOnly = date.slice(0,10);
+    // let formattedDate = dateOnly.getDate() + "-" + (dateOnly.getMonth() + 1) + "-" + dateOnly.getFullYear();
+    // console.log('dateonly, FormattedDate', dateOnly, formattedDate);
+    // const dateToMature = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
+    // console.log('matureDAte', dateToMature);
+    // const dateToMature2 = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
+    // console.log('matureDAte2', dateToMature2);
+
+
+/**
+ * The Code below from line 54 to 107 is about calculating a certain amount of working days from a particular date.
+ */
+    // javascript 0 is sunday and 6 is saturday
+    const saturday = 6;
+    const sunday = 0;
+
+    const isWeekday = (date) => {
+      const dayInWeek = date.getDay();
+      if (dayInWeek === saturday || dayInWeek === sunday) return false;
+      return true;
+    };
+
+    const formatDate = (date) => {
+      date = new Date(date)
+      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    };
+
+    const subtractWeekendsIfLastDayFallsOnIt = (getTotalDate, dayToStart) => {
+      const dayNumberInAWeek = getTotalDate.getDay();
+      const newDateFromWeekend = new Date(dayToStart);
+      if (dayNumberInAWeek === sunday) {
+        getTotalDate = new Date(newDateFromWeekend.setDate(getTotalDate.getDate() - 2));
+      } else {
+        getTotalDate = new Date(newDateFromWeekend.setDate(getTotalDate.getDate() - 1));
+      }
+      return getTotalDate
+    }
+
+    const returnDateAfterGivenWorkingDays = (dayToStart, numberOfWorkingDays) => {
+      if (dayToStart && numberOfWorkingDays){
+        const dayGiven = new Date(dayToStart);
+
+        if (Number.isNaN(dayGiven.getTime())) return 'param dayToStart should be a valid date string';
+        if (numberOfWorkingDays < 0) return 'param numberOfWorkingDays cannot be negative';
+        if (typeof numberOfWorkingDays !== 'number') return 'param numberOfWorkingDays must be a number';
+
+        if (!isWeekday(dayGiven)) return 'Date set is not a working day';
+        const dateToBeSet = new Date(dayToStart);
+        const numberOfWorkingWeeks = numberOfWorkingDays / 5;
+        const numberOfDaysToAdd = numberOfWorkingWeeks * 7;
+
+        let getTotalDate = new Date(dateToBeSet.setDate(dayGiven.getDate() + numberOfDaysToAdd - 1));
+        
+        // check if the last day is a weekend and subtract the days from it
+        if (!isWeekday(getTotalDate)) {
+          getTotalDate = subtractWeekendsIfLastDayFallsOnIt(getTotalDate, dayToStart);
+        }
+        return formatDate(getTotalDate);
+      }
+      return false;
+    }
+
+
+    // js YYYY-MM-DD
+    const dateToMature = returnDateAfterGivenWorkingDays(date, 26);
+    console.log('Achieved Mature Date is ', dateToMature);
+
+
+
     return model.Deposit.update({ dateConfirmed: date, matureDate: dateToMature, isActive: true, daysLeftToMature: 26 }, { where: { txnCode } });
   },
 

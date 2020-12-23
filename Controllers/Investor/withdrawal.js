@@ -150,13 +150,18 @@ const cancelWithdrawalRequest = async (req, res) => {
 
   try {
     const withdrawal = await getAWithdrawalById(withdrawalId);
+
     if (!withdrawal) {
-      return errorResMsg(res, 400, 'Withdrawal id doesnt exist')
-    }
-    // const reqBody = {
-    //   withdrawalStatus: 'Cancelled',
-    //   userId,
-    // }
+      return errorResMsg(res, 400, "Withdrawal id doesn't exist")
+    };
+
+    if (withdrawal.status === 'Successfull') {
+      return errorResMsg(res, 403, "You can't cancel this withdrawal request, it has been Approved");
+    };
+
+    if (withdrawal.status === 'Disapproved') {
+      return errorResMsg(res, 403, "You can't cancel this withdrawal request, it has been Disapproved");
+    }''
 
     await cancelWithdrawalStatus(withdrawalId);
     await recordActivity(res, userId, 'update', `You cancelled one of your withdrawal request As AT ${actionDate}`);

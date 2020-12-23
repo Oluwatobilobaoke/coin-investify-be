@@ -7,10 +7,10 @@ module.exports = {
   getReferralByUserId: async (userId) => {
     return model.Referral.findOne({ where: { userId } });
   },
-  getAllReferralsFromSingleUser: async (userId, attributes, limit, offset) => {
-    return model.Referral.findAndCountAll({
+  getAllReferralsFromSingleUser: async (referrer, attributes, limit, offset) => {
+    return model.User.findAndCountAll({
       where: {
-         userId 
+        referrer, 
         },
         limit,
         offset,

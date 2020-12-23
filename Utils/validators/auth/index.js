@@ -20,6 +20,21 @@ class UserValidation {
 			{}
 		);
 		validator(format, req.body, res, next);
+  }
+  
+	static validateInvestorProfileUpdate(req, res, next) {
+		const format = Joi.object().keys(
+			{
+				firstName: Format.textOptional,
+				lastName: Format.textOptional,
+				country: Format.textOptional,
+				// phoneNumber: Format.phoneNo,
+				// email: Format.email,
+        btcWalletAddress: Format.textOptional,
+			},
+			{}
+		);
+		validator(format, req.body, res, next);
 	}
 
 	static validateLogin(req, res, next) {
