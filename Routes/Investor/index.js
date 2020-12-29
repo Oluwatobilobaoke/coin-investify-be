@@ -31,6 +31,8 @@ const {
 
 const { updateProfile, getProfile } = require('../../Controllers/Investor/profile');
 
+const {getAllTransactions} = require('../../Controllers/Investor/transactions');
+
 const getId = (req, res, next) => {
   const { userId } = req.user;
   req.params.userId = userId;
@@ -67,5 +69,8 @@ router.get('/referral/:referralId', authorize(Role.Investor), getId, getAllRefer
 // Profile
 router.get('/profile/:userId', authorize(Role.Investor), getId, getProfile)
 router.patch('/profile/:userId', UserValidation.validateInvestorProfileUpdate, authorize(Role.Investor), getId, updateProfile);
+
+// Transactions
+router.get('/transaction', authorize(Role.Investor), getId, getAllTransactions);
 
 module.exports.investorRouter = router;

@@ -273,13 +273,13 @@ module.exports.depositListener = async (req, res) => {
         
             updateStatusFromCharge(CoinbaseDataObj);
             console.log('Passed WebHook Verification');
-            const depositQuery = await model.Deposit.findAll({ where: { userId, isActive: true }, });
+          //   const depositQuery = await model.Deposit.findAll({ where: { userId, isActive: true }, });
 
-           const depositKey = redisKeys.getHashKey(`deposit:${userId.toString()}`);
-           const deposits = await depositQuery;
-           await cache.set(depositKey, deposits);
+          //  const depositKey = redisKeys.getHashKey(`deposit:${userId.toString()}`);
+          //  const deposits = await depositQuery;
+          //  await cache.set(depositKey, deposits);
 
-           logger.critical(event);
+          //  logger.critical(event);
 
           } else {
            return errorResMsg(res, 404, 'Alaye hahaha you failed hacker!!, SUCK my dick');
