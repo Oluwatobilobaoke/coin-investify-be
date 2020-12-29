@@ -60,6 +60,9 @@ const initiateWithdrawal = async (req, res) => {
   } = req.body;
 
   const userDetails = await getUserById(userId);
+  if (!userDetails) {
+    return errorResMsg(res, 400, 'User Does not exist')
+  };
   const currentWallet = userDetails.dataValues.walletBalance;
   const email = userDetails.dataValues.email;
   const firstName = userDetails.dataValues.firstName;
