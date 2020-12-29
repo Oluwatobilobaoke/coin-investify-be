@@ -14,6 +14,7 @@ const recordActivity = require('../../Utils/libs/activity-cache');
 const {
   getUserById
 } = require('../dao/impl/db/user');
+
 const {
     registerEmailContent,
   } = require('../../Utils/libs/email-templates/user-deposit-email-template');
@@ -22,6 +23,10 @@ const {
   getPagination,
   getPagingData,
 } = require('../../Utils/libs/pagination');
+
+const Cache = require('../../Utils/libs/cache');
+
+const cache = new Cache();
 
 const {
   getAllDepositsFromSingleUser,
@@ -208,6 +213,8 @@ module.exports.depositListener = async (req, res) => {
 
     const {event} = req.body;
 
+    const { userId } = req.user;
+
     const eventStringified = JSON.stringify(req.body);
 
     try {
@@ -266,6 +273,12 @@ module.exports.depositListener = async (req, res) => {
         
             updateStatusFromCharge(CoinbaseDataObj);
             console.log('Passed WebHook Verification');
+            const depositQuery = await model.Deposit.findAll({ where: { userId, isActive: true }, });
+
+           const depositKey = redisKeys.getHashKey(`deposit:${userId.toString()}`);
+           const deposits = await depositQuery;
+           await cache.set(depositKey, deposits);
+
            logger.critical(event);
 
           } else {

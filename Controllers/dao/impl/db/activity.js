@@ -2,7 +2,7 @@ const model = require('../../../../models/index');
 
 module.exports = {
   getActivities: async (userId) => {
-    return model.Activity.findAll({ where: { userId } });
+    return model.Activity.findAll({ where: { userId }, attributes: ['message'] });
   },
   deleteAnActivity: async (id, userId) => {
     return model.Activity.destroy({ where: { id, userId } });

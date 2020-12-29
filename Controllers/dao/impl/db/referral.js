@@ -2,10 +2,10 @@ const model = require('../../../../models');
 
 module.exports = {
   getAReferralById: async (referralId) => {
-    return model.Referral.findOne({ where: { referralId } });
+    return model.Referral.findOne({ where: { referralId }, attributes: ['referralCount', 'referralEarnings'] });
   },
   getReferralByUserId: async (userId) => {
-    return model.Referral.findOne({ where: { userId } });
+    return model.Referral.findOne({ where: { userId }, attributes: ['referralCount', 'referralEarnings'] });
   },
   getAllReferralsFromSingleUser: async (referrer, attributes, limit, offset) => {
     return model.User.findAndCountAll({

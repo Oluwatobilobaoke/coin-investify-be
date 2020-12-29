@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const secret = process.env.COIN_INVESTIFY_JWT_SECRET;
 
-const signJWT = (data, time = '2h') => {
+const signJWT = (data, time = '1h') => {
   return jwt.sign(data, secret, { expiresIn: time });
 };
 

@@ -37,16 +37,7 @@ module.exports = {
 
   
   updateDepositDateStatus: async (txnCode, date) => {
-    // const dateOnly = date.slice(0,10);
-    // let formattedDate = dateOnly.getDate() + "-" + (dateOnly.getMonth() + 1) + "-" + dateOnly.getFullYear();
-    // console.log('dateonly, FormattedDate', dateOnly, formattedDate);
-    // const dateToMature = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
-    // console.log('matureDAte', dateToMature);
-    // const dateToMature2 = moments(formattedDate, 'DD-MM-YYYY').nextBusinessDay(26)._d;
-    // console.log('matureDAte2', dateToMature2);
-
-
-/**
+  /**
  * The Code below from line 54 to 107 is about calculating a certain amount of working days from a particular date.
  */
     // javascript 0 is sunday and 6 is saturday

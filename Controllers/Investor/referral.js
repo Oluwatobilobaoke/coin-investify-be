@@ -60,15 +60,24 @@ module.exports.getReferralCount = async (req, res) => {
 
 module.exports.getReferralDetails = async (req, res) => {
   try {
-		const { userId } = req.params;
-		const referralQuery = await getReferralByUserId(userId);
-		const referralDetails = referralQuery.dataValues;
-		if (!referralDetails) {
-      return errorResMsg(res, 400, 'User is not Valid, id doesnt exist')
-    }
-    await recordActivity(res, userId, 'create', `You viewed your Referral Information As AT ${actionDate}`);
+    const { userId } = req.params;
+    
+    const referralKeyId = redisKeys.getHashKey(`referral:${userId.toString()}`);
+    const referralCacheData = await cache.get(referralKeyId); // fetch from cache
 
-    return successResMsg(res, 200, referralDetails);
+    if (!referralCacheData) {
+      const referralQuery = await getReferralByUserId(userId);
+      const referralDetails = referralQuery.dataValues;
+      if (!referralDetails) {
+        return errorResMsg(res, 400, 'User is not Valid, id doesnt exist')
+      }
+      await cache.set(referralKeyId, referralDetails); // set email data to cache
+      await recordActivity(res, userId, 'create', `You viewed your Referral Information As AT ${actionDate}`);
+      return successResMsg(res, 200, referralDetails);
+    };
+    
+    await recordActivity(res, userId, 'create', `You viewed your Referral Information As AT ${actionDate}`);
+    return successResMsg(res, 200, referralCacheData);
 		
   } catch (error) {
     logger.error(error);

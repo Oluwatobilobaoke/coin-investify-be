@@ -127,14 +127,19 @@ const returnUser = async (req, res, email, password, user) => {
         signInIp: ipAddress,
       };
 
+      const userId = dataToTrack.userId;
       await trackLogin(dataToTrack);
 
       const token = signJWT(data);
 
       // set cache if not set
       const keyId = redisKeys.getHashKey(`email:${email.toString()}`);
+      const userKeyId = redisKeys.getHashKey(`user:${userId.toString()}`);
       const userCacheData = await cache.get(keyId); // fetch from cache
-      if (!userCacheData) await cache.set(keyId, user); // set email data to cache
+      if (!userCacheData) {
+        await cache.set(keyId, user); // set email data to cache 
+        await cache.set(userKeyId, user); // set email data to cache 
+      };
 
       const dataInfo = { message: 'Login Successful!', token };
       return successResMsg(res, 200, dataInfo);
@@ -193,10 +198,16 @@ const verifyLogin = async (req, res) => {
   
   const token = signJWT(data);
 
-      // // set cache if not set
-      // const keyId = redisKeys.getHashKey(`email:${email.toString()}`);
-      // const userCacheData = await cache.get(keyId); // fetch from cache
-      // if (!userCacheData) await cache.set(keyId, user); // set email data to cache
+  const userId = dataToTrack.userId;
+  const email = user.email;
+
+  const keyId = redisKeys.getHashKey(`email:${email.toString()}`);
+  const userKeyId = redisKeys.getHashKey(`user:${userId.toString()}`);
+  const userCacheData = await cache.get(keyId); // fetch from cache
+  if (!userCacheData) {
+    await cache.set(keyId, user); // set email data to cache 
+    await cache.set(userKeyId, user); // set email data to cache 
+  };
 
       const dataInfo = { message: 'Login Attempt Verified Successfully!', token };
       return successResMsg(res, 200, dataInfo);
