@@ -4,6 +4,19 @@ module.exports = {
   getAWithdrawalById: async (withdrawalId) => {
     return model.Withdrawal.findOne({ where: { withdrawalId } });
   },
+  getTransactions: async (userId) => {
+    model.Withdrawal.findAndCountAll({
+      where: {
+        userId 
+       },
+       limit,
+       offset,
+       attributes,
+       include: [{
+         model:Deposit, 
+       }]
+     });
+  },
   getAllWithdrawalsFromSingleUser: async (userId, attributes, limit, offset) => {
     return model.Withdrawal.findAndCountAll({
       where: {

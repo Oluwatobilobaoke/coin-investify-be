@@ -3,7 +3,9 @@ const Role = require('../Middleware/role');
 
 const { home, contactUs } = require('../Controllers/home');
 const {
-  createTicket
+	createTicket,
+	getAllUserTicket,
+	getSupportTicket,
 } = require('../Controllers/support')
 
 
@@ -25,5 +27,7 @@ index.post('/contact-us', ContactUsValidation.validateMessage, contactUs);
 
 // Support
 index.post('/ticket', multerInstance.upload.single('attachment'), authorize(), getId, createTicket);
+index.get('/ticket', authorize(Role.Investor), getId, getAllUserTicket);
+index.get('/ticket/:supportId', authorize(Role.Investor), getId, getSupportTicket);
 
 module.exports.index = index;

@@ -1,17 +1,18 @@
 
 const { successResMsg, errorResMsg } = require('../../Utils/libs/response');
+const logger = require('../../logger').Logger;
 
-const {
-  getUserById,
-} = require('../dao/impl/db/user');
+const 
+  {getUserById}
+ = require('../dao/impl/db/user');
 
-const {
+const 
   getUserWithdrawals 
-} = require('./withdrawal');
+ = require('./withdrawal');
 
-const {
+const 
   getAllDeposits
-} = require('./deposit');
+ = require('./deposit');
 
 module.exports.getAllTransactions = async (req, res) => {
   const { userId } = req.params;
@@ -23,6 +24,8 @@ module.exports.getAllTransactions = async (req, res) => {
 			};
 			 const withdrawals = getUserWithdrawals();
 			 const deposits = getAllDeposits();
+
+
 
 			const dataInfo = {
 				withdrawals,

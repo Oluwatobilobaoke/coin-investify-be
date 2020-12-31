@@ -8,6 +8,7 @@ const attributes = [
   'userId',
   'firstName',
   'lastName',
+  'referralId',
   'email',
   'walletBalance',
   'currentSignInOn',

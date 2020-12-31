@@ -69,7 +69,7 @@ const initiateWithdrawal = async (req, res) => {
   // console.log('passed 1', currentWallet);
 
   if (amount > currentWallet) {
-    return errorResMsg(res, 400, 'Insufficent Funds, Kindly check your Wallet Balance')
+    return errorResMsg(res, 400, 'Insufficient Funds, Kindly check your Wallet Balance')
   }
 
   console.log('passed 2');

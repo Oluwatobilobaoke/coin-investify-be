@@ -11,14 +11,48 @@ const {
 } = require('./dao/impl/db/user');
 
 const {
+  getPagination,
+  getPagingData,
+} = require('../Utils/libs/pagination');
+
+const attributes = [
+  'typeOfSupport',
+  'subject',
+  'statusOfSupportTicket',
+  'priority',
+  'supportId',
+  'updatedAt'
+];
+
+const supportPublicAttributes = [
+  'typeOfSupport',
+  'subject',
+  'email',
+  'name',
+  'description',
+  'attachment',
+  'statusOfSupportTicket',
+  'priority',
+  'response',
+  'supportId',
+  'createdAt',
+  'updatedAt'
+]
+
+const recordActivity = require('../Utils/libs/activity-cache');
+
+
+const {
   getSupportByEmail,
   getSupportById,
   createSupport,
   updateSupportStatus,
-  updateSupportData
-
+  updateSupportData,
+  getAllSupportsFromSingleUser,
+  getSupportAttributes,
 	} = require('./dao/impl/db/support');
 
+  const actionDate = moment().format();
 
 module.exports.createTicket = async (req, res) => {
 		const {
@@ -77,3 +111,41 @@ module.exports.createTicket = async (req, res) => {
 	return false;
 }
 
+module.exports.getAllUserTicket = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    const allSupportTicket = await getAllSupportsFromSingleUser(userId, attributes, limit, offset);
+    const data = getPagingData(allSupportTicket.count, page, limit);
+    const dataInfo = {
+      tickets: allSupportTicket,
+      ticket: data,
+    };
+
+  await recordActivity(res, userId, 'create', `You viewed all your Support Ticket As AT ${actionDate}`);
+  return successResMsg(res, 200, dataInfo);
+  } catch (error) {
+    logger.error(error);
+		return errorResMsg(res, 500, 'it is us, not you. Please try again');
+  }
+}
+
+module.exports.getSupportTicket = async (req, res) => {
+  try {
+    const { userId, supportId } = req.params;
+    const SupportQuery = await getSupportAttributes(supportId, supportPublicAttributes);
+    const Support = await SupportQuery.dataValues;
+
+    if (!Support) {
+      return errorResMsg(res, 400, 'Support id doesnt exist')
+    }
+    await recordActivity(res, userId, 'create', `You viewed a Support request As AT ${actionDate}`);
+
+    return successResMsg(res, 200, Support);
+  } catch (error) {
+    logger.error(error);
+		return errorResMsg(res, 500, 'it is us, not you. Please try again');
+  }
+}

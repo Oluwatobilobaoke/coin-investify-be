@@ -9,10 +9,8 @@ const storage = multer.diskStorage({
         cb(null, new Date().toISOString().replace(/:/g, '-')+ file.originalname);
     }
 });
-console.log(storage);
-// checking file type
 const fileFilter = (req, file, cb) => {
-    console.log("file", file);
+    // console.log("file", file);
     if (file.mimetype.startsWith('image')) {
         cb(null, true);
     } else if (file.mimetype.startsWith('application')) {

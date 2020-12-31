@@ -13,13 +13,15 @@ module.exports = {
   createSupport: async (data) => {
     return model.Support.create(data);
   },
-  getInvestorWithAttributes: async (attributesTalents) => {
-    return model.Support.findAll({
-      // TODO: bring line 19 back when email for email verification is settled
-      // where: { status: '1', roleId: 'ROL-EMPLOYEE' },
-      where: { roleId: 'ROL-INVESTOR' },
-      attributes: attributesTalents,
-    });
+  getAllSupportsFromSingleUser: async (userId, attributes, limit, offset) => {
+    return model.Support.findAndCountAll({
+      where: {
+         userId 
+        },
+        limit,
+        offset,
+        attributes,
+      });
   },
   getSupportIpAddress: async (email) => {
     return model.Support.findOne({ where: { LastSignInIp }})
@@ -53,8 +55,8 @@ module.exports = {
       },
     });
   },
-  getSupportAttributes: async (SupportId, attributes) => {
-    return model.Support.findOne({ where: { SupportId }, attributes });
+  getSupportAttributes: async (supportId, attributes) => {
+    return model.Support.findOne({ where: { supportId }, attributes });
   },
   allowShare: async (SupportId) => {
     return model.Support.update(
