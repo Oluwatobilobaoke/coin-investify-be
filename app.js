@@ -27,7 +27,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
 app.use(cors());
+app.use('/files', express.static("files"));
 db.sequelize.sync().then(async () => {
   await seedSuperAdmin();
 });

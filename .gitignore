@@ -135,3 +135,4 @@ package-lock.json
 tmp/
 dump.rdb
 migrations/
+files/

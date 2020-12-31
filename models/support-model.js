@@ -6,28 +6,23 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         type: DataTypes.INTEGER,
       },
-      userId: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      type: {
-        type: DataTypes.ENUM,
-        values: ['contact', 'abuse'],
-        allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
+      typeOfSupport: {
+        type: DataTypes.STRING(40),
         allowNull: false,
       },
       email: {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      subject: {
+      name: {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      message: {
+      subject: {
+        type: DataTypes.STRING(150),
+        allowNull: false,
+      },
+      description: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -35,11 +30,26 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      status: {
-        type: DataTypes.ENUM,
-        values: ['open', 'closed'],
-        defaultValue: 'open',
+      statusOfSupportTicket: {
+        type: DataTypes.STRING(15),
+        defaultValue: 'Open',
         allowNull: false,
+      },
+      supportId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      attachment: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      priority: {
+        type: DataTypes.STRING(15),
+        allowNull: false,
+      },
+      userId: {
+        allowNull: false,
+        type: DataTypes.STRING,
       },
     });
   
