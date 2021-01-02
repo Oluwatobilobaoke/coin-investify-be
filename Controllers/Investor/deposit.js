@@ -91,7 +91,7 @@ module.exports.initiateDepositCharge = async (req, res) => {
     } = req.body;
 
   const checkUser = await getUserById(userId);
-  console.log(checkUser);
+ // console.log(checkUser);
 
   const email = checkUser.dataValues.email;
 
@@ -282,9 +282,9 @@ module.exports.depositListener = async (req, res) => {
                 case 'charge:pending':
                   await updateDepositStatus(data.code, pendingStatus);
                   break;
-                case 'charge:created':
-                  await updateDepositStatus(data.code, createdStatus);
-                  break;
+                // case 'charge:created':
+                //   await updateDepositStatus(data.code, createdStatus);
+                //   break;
                 case 'charge:failed':
                   await updateDepositStatus(data.code, failedStatus);
                   break;

@@ -79,13 +79,23 @@ module.exports = {
       { where: { userId } }
     );
   },
-  getAllTalents: async (attributes) => {
+  getAllInvestorUsers: async (attributes) => {
     return model.User.findAll({
       // TODO: bring line 74 back when email for email verification is settled
       // where: { status: '1', roleId: 'ROL-EMPLOYEE', profileCreated: true },
-      where: { roleId: 'ROL-EMPLOYEE', profileCreated: true },
+      where: { roleId: 'ROL-EMPLOYEE'},
       attributes,
     });
+  },
+  getAllInvestorUsers: async (attributes, limit, offset) => {
+    return model.User.findAndCountAll({
+      where: {
+        roleId:  
+        },
+        limit,
+        offset,
+        attributes,
+      });
   },
   contactUs: async (data) => {
     return model.Contact.create(data);
