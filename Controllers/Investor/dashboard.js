@@ -15,6 +15,7 @@ const attributes = [
   'LastSignInOn',
   'currentSignInIp',
   'LastSignInIp',
+  'createdAt'
 ];
 
 const investorDashboard = async (req, res) => {

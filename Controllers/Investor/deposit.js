@@ -42,6 +42,7 @@ const {
 const depositPublicAttributes = [
   'depositStatus',
   'depositDate',
+  'addressSentTo',
   'dateConfirmed',
   'interestPerDay',
   'accruedInterest',
@@ -75,7 +76,7 @@ const actionDate = moment().format();
  const failedStatus = 'Failed & Expired';
  const delayedStatus = 'Delayed';
  const resolvedStatus = 'Resolved & Successfull';
- const createdStatus = 'Created';
+ const createdStatus = 'Created & Processing';
 
 
 
@@ -228,10 +229,10 @@ module.exports.depositListener = async (req, res) => {
   try {
 
     const {event} = req.body;
-    console.log('event received', event);
+    //console.log('event received', event);
 
     // const { userId } = req.user;
-    console.log('event received body', req.body);
+    //console.log('event received body', req.body);
 
     const eventStringified = JSON.stringify(req.body);
 
@@ -258,7 +259,7 @@ module.exports.depositListener = async (req, res) => {
               amount: event.data.pricing.local.amount,
             };
         
-            console.log('passed Date', CoinbaseDataObj.dateConfirmed);
+            // console.log('passed Date', CoinbaseDataObj.dateConfirmed);
 
             const tranSanctionCode = CoinbaseDataObj.code;
 
