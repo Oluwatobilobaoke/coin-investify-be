@@ -230,7 +230,8 @@ module.exports.depositListener = async (req, res) => {
     const {event} = req.body;
     console.log('event received', event);
 
-    const { userId } = req.user;
+    // const { userId } = req.user;
+    console.log('event received body', req.body);
 
     const eventStringified = JSON.stringify(req.body);
 
