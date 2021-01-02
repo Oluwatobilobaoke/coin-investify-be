@@ -228,10 +228,14 @@ module.exports.depositListener = async (req, res) => {
   try {
 
     const {event} = req.body;
+    console.log('event received', event);
 
     const { userId } = req.user;
 
     const eventStringified = JSON.stringify(req.body);
+
+    console.log('event received stringify', eventStringified);
+
 
     try {
       const verified = Webhook.verifyEventBody(
@@ -241,7 +245,7 @@ module.exports.depositListener = async (req, res) => {
       );
       console.log('Incoming Event being sent is Successfully Verified');
 
-      logger.info(eventStringified);
+      
 
       if (verified) {
             const CoinbaseDataObj= {
