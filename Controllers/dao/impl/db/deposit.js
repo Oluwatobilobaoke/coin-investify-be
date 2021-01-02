@@ -36,7 +36,7 @@ module.exports = {
   //   });
   // },
   updateDepositStatus: async (txnCode, status) => {
-    return model.Deposit.update({ DepositStatus: status }, { where: { txnCode } });
+    return model.Deposit.update({ depositStatus: status }, { where: { txnCode } });
   },
 
 

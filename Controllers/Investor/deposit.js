@@ -34,6 +34,7 @@ const {
   updateDepositDateStatus,
   createDeposit,
   updateDepositStatus,
+  updateDeposit,
   getDepositAttributes,
   getDepositByCoinbaseCode,
   updateInterestPerday,
@@ -71,12 +72,12 @@ const actionDate = moment().format();
  * @param {*} res 
  */
 
- const successStatus = 'Confirmed & Successfull';
- const pendingStatus = 'Pending';
- const failedStatus = 'Failed & Expired';
- const delayedStatus = 'Delayed';
- const resolvedStatus = 'Resolved & Successfull';
- const createdStatus = 'Created & Processing';
+//  const successStatus = 'Confirmed & Successfull';
+//  const pendingStatus = 'Pending';
+//  const failedStatus = 'Failed & Expired';
+//  const delayedStatus = 'Delayed';
+//  const resolvedStatus = 'Resolved & Successfull';
+//  const createdStatus = 'Created & Processing';
 
 
 
@@ -143,7 +144,7 @@ module.exports.initiateDepositCharge = async (req, res) => {
       depositId: depositCharge.id,
       amountInUsd: depositCharge.pricing.local.amount,
       amountInBtc: depositCharge.pricing.bitcoin.amount,
-      depositStatus: depositCharge.timeline[0].status,
+      depositStatus: 'Initiated, Awaiting Payment',
       depositDate: depositCharge.timeline[0].time,
       coinType,
       userId,
@@ -274,25 +275,33 @@ module.exports.depositListener = async (req, res) => {
               switch (data.type) {
                 case 'charge:confirmed':
                   console.log('confirmed', data.type);
-                  console.log('confirmedAt', data.dateConfirmed);
+                  console.log('confirmedAt', data.dateConfirmed); // TODO Remove all unnessary console.log here
                   await updateDepositStatus(data.code, successStatus);
                   await updateDepositDateStatus(data.code, data.dateConfirmed)
+                  // await updateDeposit()
                   await updateInterestPerday(data.code, data.amount);
+                  console.log('Status has been confirmed');
                   break;
                 case 'charge:pending':
                   await updateDepositStatus(data.code, pendingStatus);
+                  console.log('Status is pending');
                   break;
                 // case 'charge:created':
                 //   await updateDepositStatus(data.code, createdStatus);
                 //   break;
                 case 'charge:failed':
                   await updateDepositStatus(data.code, failedStatus);
+                  console.log('Status has failed');
+                  const test = await getDepositByCoinbaseCode(data.code);
+                  console.log('Omor Transaction don fail', test);
                   break;
                 case 'charge:delayed':
                   await updateDepositStatus(data.code, delayedStatus);
+                  console.log('Status is been delayed');
                   break;
                 case 'charge:resolved':
                   await updateDepositStatus(data.code, resolvedStatus);
+                  console.log('Status has been resolved');
                   break;
                 default:
                   break;
