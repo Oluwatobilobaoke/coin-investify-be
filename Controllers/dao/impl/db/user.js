@@ -90,7 +90,7 @@ module.exports = {
   getAllInvestorUsers: async (attributes, limit, offset) => {
     return model.User.findAndCountAll({
       where: {
-        roleId:  
+        roleId: 'ROL-INVESTOR' 
         },
         limit,
         offset,
