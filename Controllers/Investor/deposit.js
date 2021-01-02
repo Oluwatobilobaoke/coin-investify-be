@@ -72,12 +72,12 @@ const actionDate = moment().format();
  * @param {*} res 
  */
 
-//  const successStatus = 'Confirmed & Successfull';
-//  const pendingStatus = 'Pending';
-//  const failedStatus = 'Failed & Expired';
-//  const delayedStatus = 'Delayed';
-//  const resolvedStatus = 'Resolved & Successfull';
-//  const createdStatus = 'Created & Processing';
+ const successStatus = 'Confirmed & Successfull';
+ const pendingStatus = 'Pending';
+ const failedStatus = 'Failed & Expired';
+ const delayedStatus = 'Delayed';
+ const resolvedStatus = 'Resolved & Successfull';
+ const createdStatus = 'Created & Processing';
 
 
 
