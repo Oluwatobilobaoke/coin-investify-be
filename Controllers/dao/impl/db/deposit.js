@@ -1,7 +1,12 @@
 const model = require('../../../../models');
 
-const interestRate = process.COIN_INVESTIFY_INVESTMENT_PERCENTAGE / process.env.COIN_INVESTIFY_INVESTMENT_DAYS;
+const rate = process.env.COIN_INVESTIFY_INVESTMENT_PERCENTAGE;
+const numOfDays = process.env.COIN_INVESTIFY_INVESTMENT_DAYS;
+
+const interestRate = rate / numOfDays;
 console.log("interestRate is ", interestRate);
+console.log("process.env.COIN_INVESTIFY_INVESTMENT_PERCENTAGE is ", rate);
+console.log("process.env.COIN_INVESTIFY_INVESTMENT_DAYS is ", numOfDays);
 module.exports = {
   getADepositById: async (depositId) => {
     return model.Deposit.findOne({ where: { depositId } });

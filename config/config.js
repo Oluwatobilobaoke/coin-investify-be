@@ -7,7 +7,7 @@ module.exports = {
     database: process.env.COIN_INVESTIFY_DB_NAME,
     host: process.env.COIN_INVESTIFY_DB_HOST,
     dialect: process.env.COIN_INVESTIFY_DB_DIALECT,
-    logging: true,
+    logging: false,
   },
   test: {
     username: process.env.COIN_INVESTIFY_DB_USER,

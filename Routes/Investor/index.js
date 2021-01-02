@@ -60,7 +60,7 @@ router.post('/withdrawal/:withdrawalId', authorize(Role.Investor), getId, cancel
 router.get('/dashboard', authorize(Role.Investor), getId, dashboard);
 
 // Deposit WebHook from Coinbase
-router.post('/deposit-confirmation', depositListener);
+router.post('/deposit-callback', depositListener);
 
 // Referral 
 router.get('/referral', authorize(Role.Investor), getId, getReferralDetails);
