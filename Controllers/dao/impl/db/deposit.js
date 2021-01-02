@@ -1,7 +1,7 @@
 const model = require('../../../../models');
 
 const interestRate = process.COIN_INVESTIFY_INVESTMENT_PERCENTAGE / process.env.COIN_INVESTIFY_INVESTMENT_DAYS;
-console.log(interestRate);
+console.log("interestRate is ", interestRate);
 module.exports = {
   getADepositById: async (depositId) => {
     return model.Deposit.findOne({ where: { depositId } });
@@ -89,7 +89,6 @@ module.exports = {
       }
       return false;
     }
-
 
     // js YYYY-MM-DD
     const dateToMature = returnDateAfterGivenWorkingDays(date, 26);

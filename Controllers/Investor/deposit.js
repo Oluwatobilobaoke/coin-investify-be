@@ -35,6 +35,7 @@ const {
   createDeposit,
   updateDepositStatus,
   getDepositAttributes,
+  getDepositByCoinbaseCode,
   updateInterestPerday,
 } = require('../../Controllers/dao/impl/db/deposit');
 
@@ -62,6 +63,21 @@ const depositAttributes = [
 ];
 
 const actionDate = moment().format();
+/**
+ * 
+ * @param {*} req Codes for transaction
+ * 
+ * @param {*} res 
+ */
+
+ const successStatus = 'Confirmed & Successfull';
+ const pendingStatus = 'Pending';
+ const failedStatus = 'Failed & Expired';
+ const delayedStatus = 'Delayed';
+ const resolvedStatus = 'Resolved & Successfull';
+ const createdStatus = 'Created';
+
+
 
 module.exports.initiateDepositCharge = async (req, res) => {
   
@@ -238,33 +254,39 @@ module.exports.depositListener = async (req, res) => {
             };
         
             console.log('passed Date', CoinbaseDataObj.dateConfirmed);
+
+            const tranSanctionCode = CoinbaseDataObj.code;
+
+            const checkTransactionExist = await getDepositByCoinbaseCode(tranSanctionCode);
+
+            if (!checkTransactionExist) return errorResMsg(res, 403, 'Transaction does not exist in our records');
         
             async function updateStatusFromCharge(CoinbaseDataObj) {
               
               const data = CoinbaseDataObj;
-              
+                           
               switch (data.type) {
                 case 'charge:confirmed':
-                console.log('confirmed', data.type);
-                console.log('confirmedAt', data.dateConfirmed);
-                  await updateDepositStatus(data.code, 'Successfull');
+                  console.log('confirmed', data.type);
+                  console.log('confirmedAt', data.dateConfirmed);
+                  await updateDepositStatus(data.code, successStatus);
                   await updateDepositDateStatus(data.code, data.dateConfirmed)
                   await updateInterestPerday(data.code, data.amount);
                   break;
                 case 'charge:pending':
-                await updateDepositStatus(data.code, 'Pending');
+                  await updateDepositStatus(data.code, pendingStatus);
                   break;
                 case 'charge:created':
-                  await updateDepositStatus(data.code, 'Created');
+                  await updateDepositStatus(data.code, createdStatus);
                   break;
                 case 'charge:failed':
-                  await updateDepositStatus(data.code, 'Expired');
+                  await updateDepositStatus(data.code, failedStatus);
                   break;
                 case 'charge:delayed':
-                  await updateDepositStatus(data.code, 'Delayed');
+                  await updateDepositStatus(data.code, delayedStatus);
                   break;
                 case 'charge:resolved':
-                  await updateDepositStatus(data.code, 'Resolved');
+                  await updateDepositStatus(data.code, resolvedStatus);
                   break;
                 default:
                   break;
@@ -280,8 +302,9 @@ module.exports.depositListener = async (req, res) => {
           //  await cache.set(depositKey, deposits);
 
           //  logger.critical(event);
+          return successResMsg(res, 200, 'Deposit Status Updated Successfully');
 
-          } else {
+        } else {
            return errorResMsg(res, 404, 'Alaye hahaha you failed hacker!!, SUCK my dick');
           }
           
