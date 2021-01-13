@@ -8,6 +8,9 @@ console.log("interestRate is ", interestRate);
 console.log("process.env.COIN_INVESTIFY_INVESTMENT_PERCENTAGE is ", rate);
 console.log("process.env.COIN_INVESTIFY_INVESTMENT_DAYS is ", numOfDays);
 module.exports = {
+  deleteDepositById: async (depositId) => {
+    return model.Deposit.destroy({ where: { depositId } });
+  },
   getADepositById: async (depositId) => {
     return model.Deposit.findOne({ where: { depositId } });
   },
@@ -115,10 +118,11 @@ module.exports = {
   updateInvestorDepositData: async (data, depositId) => {
     return model.Deposit.update(data, { where: { depositId } });
   },
-  getAllDeposits: async (limit, offset) => {
+  getAllDeposits: async (attributes, limit, offset) => {
     return model.Deposit.findAndCountAll({
 			limit,
-			offset,
+      offset,
+      attributes,
 		});
 	},
 	getAllSuccessfullDeposits: async (limit, offset) => {

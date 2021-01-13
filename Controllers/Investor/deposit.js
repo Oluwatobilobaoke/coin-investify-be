@@ -286,9 +286,9 @@ module.exports.depositListener = async (req, res) => {
                   await updateDepositStatus(data.code, pendingStatus);
                   console.log('Status is pending');
                   break;
-                // case 'charge:created':
-                //   await updateDepositStatus(data.code, createdStatus);
-                //   break;
+                case 'charge:created':
+                  await updateDepositStatus(data.code, createdStatus);
+                  break;
                 case 'charge:failed':
                   await updateDepositStatus(data.code, failedStatus);
                   console.log('Status has failed');

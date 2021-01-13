@@ -8,8 +8,8 @@ const logger = require('../../logger').Logger;
 
 const URL =
   process.env.NODE_ENV === 'development'
-    ? process.env.ZURI_TALENT_DEV_URL
-    : process.env.ZURI_TALENT_FRONT_END_URL;
+    ? process.env.COIN_INVESTIFY_DEV_URL
+    : process.env.COIN_INVESTIFY_FRONT_END_URL;
 
 const createAdmin = async (req, res) => {
   try {
@@ -35,7 +35,7 @@ const createAdmin = async (req, res) => {
     const link = `${URL}/login`;
     const options = {
       email,
-      subject: 'New ZuriTalent Staff Account Details',
+      subject: 'New Coin Investify Staff Account Details',
       message: `<h5>Login Credentials<h5>
                   <p>Email: ${email}<p>
                   <p>Password: ${password}<p>

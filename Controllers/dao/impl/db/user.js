@@ -97,6 +97,16 @@ module.exports = {
         attributes,
       });
   },
+  getAllAdminUsers: async (attributes, limit, offset) => {
+    return model.User.findAndCountAll({
+      where: {
+        roleId: 'ROL-ADMIN' 
+        },
+        limit,
+        offset,
+        attributes,
+      });
+  },
   contactUs: async (data) => {
     return model.Contact.create(data);
   },
